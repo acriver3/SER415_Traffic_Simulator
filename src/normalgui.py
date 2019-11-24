@@ -88,11 +88,11 @@ tTimeNSGrnArr.place(relx=0.65, rely=0.275, height=20, width=45)
 tTimeWE.place(relx=0.65, rely=0.5, height=20, width=45)
 tTimeWEGrnArr.place(relx=0.65, rely=0.725, height=20, width=45)
 
-defaultScenario = tk.StringVar(top)
-defaultScenario.set("None")
+currScenario = tk.StringVar(top)
+currScenario.set("None") # set default scenario to 'None'
 
 # 'Scenarios' drop down menu
-scenarios = tk.OptionMenu(top, defaultScenario, "None", "Construction", "Weather", "Accident")
+scenarios = tk.OptionMenu(top, currScenario, "None", "Construction", "Weather", "Accident")
 scenarios.place(relx=0.75, rely=0.6, height=25, width=125)
 
 # ---Buttons---
@@ -109,9 +109,14 @@ bRunSim.place(relx=0.054, rely=0.11, height=34, width=97)
 def startSim(event):
     print(tTimeNS.get("1.0", "end-1c"))
 
+
+def scenarioChange(*args):
+    print(currScenario.get())
+
 # CALLBACK BINDINGS
 bRunSim.bind("<Button-1>", startSim)
 
+currScenario.trace('w', scenarioChange)
 
 #-------------------------------------------------------------------------------
 # HELPER FUNCTIONS
