@@ -5,8 +5,9 @@
 
 import tkinter as tk
 import tkinter.ttk
-#import numpy as np
+import numpy as np
 import math
+import time
 
 root = tkinter.Tk()
 
@@ -101,27 +102,43 @@ bRunSim = tk.Button(top, text="Run Simulation", bg = "#90EE90")
 
 bRunSim.place(relx=0.054, rely=0.11, height=34, width=97)
 
+# ---Boolean Indicators---
+rbSimRunning = tk.Radiobutton(top, text ="")
+rbSimRunning.place(relx=0.2, rely=0.11, height=25, width=25)
+rbSimRunning.deselect()
 
 #-------------------------------------------------------------------------------
 # CALLBACK FUNCTIONS
 
 # Starts simulation when user clicks 'Run Simulation' button
 def startSim(event):
-    print(tTimeNS.get("1.0", "end-1c"))
+    testCycleLength = 15 # test cycle length of 15 seconds
+    testNumCars = 20 # test number of cars during cycle
+
+    startTime = time.time()
+    currTime = time.time() - startTime
+    currSecond = 0;
+
+    while(currTime < testCycleLength):
+        if (currTime > currSecond):
+            currRate = (math.tanh(currTime-3) + 1)
+            testNumCars -= currRate
+            currSecond += 1
+            print(testNumCars)
+        currTime = time.time() - startTime
+    #print(tTimeNS.get("1.0", "end-1c"))
 
 # Updates flow rate scalar based on scenario selection
 def scenarioChange(*args):
     # change based on selected scenario
-    if currScenario.get() == "None":
+    if (currScenario.get() == "None"):
         flowRateScalar = 1 #UPDATE
-    elif currScenario.get() == "Construction":
+    elif (currScenario.get() == "Construction"):
         flowRateScalar = 1 #UPDATE
-    elif currScenario.get() == "Weather":
+    elif (currScenario.get() == "Weather"):
         flowRateScalar = 1 #UPDATE
-    elif currScenario.get() == "Accident":
+    elif (currScenario.get() == "Accident"):
         flowRateScalar = 1 #UPDATE
-
-    print(flowRateScalar)
 
 # CALLBACK BINDINGS
 bRunSim.bind("<Button-1>", startSim)
