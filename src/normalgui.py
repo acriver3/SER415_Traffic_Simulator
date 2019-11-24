@@ -63,10 +63,10 @@ tCarsInW = tk.Text(top)
 tCarsInN = tk.Text(top)
 tCarsInE = tk.Text(top)
 tCarsInS = tk.Text(top)
-tCarsOutW = tk.Text(top)
-tCarsOutN = tk.Text(top)
-tCarsOutE = tk.Text(top)
-tCarsOutS = tk.Text(top)
+tCarsOutW = tk.Text(top, state="disabled")
+tCarsOutN = tk.Text(top, state="disabled")
+tCarsOutE = tk.Text(top, state="disabled")
+tCarsOutS = tk.Text(top, state="disabled")
 
 # 'Cycle times' text fields
 tTimeNS = tk.Text(fTiming)
@@ -109,9 +109,19 @@ bRunSim.place(relx=0.054, rely=0.11, height=34, width=97)
 def startSim(event):
     print(tTimeNS.get("1.0", "end-1c"))
 
-
+# Updates flow rate scalar based on scenario selection
 def scenarioChange(*args):
-    print(currScenario.get())
+    # change based on selected scenario
+    if currScenario.get() == "None":
+        flowRateScalar = 1 #UPDATE
+    elif currScenario.get() == "Construction":
+        flowRateScalar = 1 #UPDATE
+    elif currScenario.get() == "Weather":
+        flowRateScalar = 1 #UPDATE
+    elif currScenario.get() == "Accident":
+        flowRateScalar = 1 #UPDATE
+
+    print(flowRateScalar)
 
 # CALLBACK BINDINGS
 bRunSim.bind("<Button-1>", startSim)
