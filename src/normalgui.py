@@ -1,11 +1,10 @@
-# SER415 Traffic Simulator - Team 6
+# SER415 Traffic Simulator - Team 8
 # Manolito Ramirez, Jessica Gilbert, Mike Wagner,
 # Carlos Franco, Arthur Rivera, and Ryan Kirmis
 # Version 1.1.1
 
 import tkinter as tk
 import tkinter.ttk
-import numpy as np
 import math
 import time
 
@@ -14,6 +13,7 @@ root = tkinter.Tk()
 #-------------------------------------------------------------------------------
 # GLOBALS:
 flowRateScalar = 1;     # used to change flow rate for specific scenarios
+sampleDelay = 1000;     # delay between samples
 
 #-------------------------------------------------------------------------------
 # GUI SETUP:
@@ -24,6 +24,7 @@ top.pack();
 top.create_text((20, 10), text="Traffic Simulator", font="MSGothic 20 bold", fill="#065535", anchor="nw")
 top.create_text((500, 50), text="Cycle Timing", font="MSGothic 15 bold", fill="#065535", anchor="nw")
 top.create_text((555, 290), text="Scenarios", font="MSGothic 15 bold", fill="#065535", anchor="nw")
+top.create_text((147, 57), text="Time (s)", font="MSGothic 8 bold", fill="#065535", anchor="nw")
 
 root.geometry("739x535+503+155")
 root.minsize(120, 1)
@@ -56,6 +57,10 @@ lTimeNS.place(relx=0.05, rely=0.05, height=20, width=100)
 lTimeNSGrnArr.place(relx=0.05, rely=0.275, height=20, width=100)
 lTimeWE.place(relx=0.05, rely=0.5, height=20, width=100)
 lTimeWEGrnArr.place(relx=0.05, rely=0.725, height=20, width=100)
+
+# Current Time Indicator
+lCurrTime = tk.Label(top, anchor="nw")
+lCurrTime.place(relx=0.2, rely=0.135, height=20, width=30)
 
 
 # ---Text fields---
@@ -103,29 +108,45 @@ bRunSim = tk.Button(top, text="Run Simulation", bg = "#90EE90")
 bRunSim.place(relx=0.054, rely=0.11, height=34, width=97)
 
 # ---Boolean Indicators---
-rbSimRunning = tk.Radiobutton(top, text ="")
-rbSimRunning.place(relx=0.2, rely=0.11, height=25, width=25)
-rbSimRunning.deselect()
+#rbSimRunning = tk.Radiobutton(top, text ="")
+#rbSimRunning.place(relx=0.2, rely=0.11, height=25, width=25)
+#rbSimRunning.deselect()
 
 #-------------------------------------------------------------------------------
 # CALLBACK FUNCTIONS
 
+testCycleLength = 0 # test cycle length of 15 seconds
+testNumCars = 0 # test number of cars during cycle
+
+startTime = 0
+currTime = 0
+currSecond = 0
+
 # Starts simulation when user clicks 'Run Simulation' button
 def startSim(event):
+    global currTime, startTime, currSecond, testCycleLength, testNumCars
+
     testCycleLength = 15 # test cycle length of 15 seconds
     testNumCars = 20 # test number of cars during cycle
 
     startTime = time.time()
     currTime = time.time() - startTime
-    currSecond = 0;
+    currSecond = 0
+    root.after(0, cycle)
 
-    while(currTime < testCycleLength):
+def cycle():
+    global currTime, startTime, currSecond, testCycleLength, testNumCars
+
+    lCurrTime["text"] = round(currTime)
+    if(currTime < testCycleLength):
         if (currTime > currSecond):
             currRate = (math.tanh(currTime-3) + 1)
             testNumCars -= currRate
             currSecond += 1
+
             print(testNumCars)
         currTime = time.time() - startTime
+        root.after(sampleDelay, cycle)
     #print(tTimeNS.get("1.0", "end-1c"))
 
 # Updates flow rate scalar based on scenario selection
