@@ -13,7 +13,8 @@ root = tkinter.Tk()
 #-------------------------------------------------------------------------------
 # GLOBALS:
 flowRateScalar = 1;     # used to change flow rate for specific scenarios
-sampleDelay = 500;     # delay between samples
+sampleDelay = 500;      # delay between samples
+simActive = False;      # boolean for checking if simulation is active
 
 #-------------------------------------------------------------------------------
 # GUI SETUP:
@@ -67,6 +68,7 @@ lCurrTime["text"] = 0
 # Current Cycle Indicator
 lCurrCycle = tk.Label(top, anchor="nw")
 lCurrCycle.place(relx=0.49, rely=0.04, height=25, width=70)
+lCurrCycle["text"] = "-"
 
 # ---Text fields---
 # 'Number of cars' text fields
@@ -174,8 +176,10 @@ scenarios.place(relx=0.75, rely=0.6, height=25, width=125)
 # ---Buttons---
 # 'Run Simulation' button
 bRunSim = tk.Button(top, text="Run Simulation", bg = "#90EE90")
-
 bRunSim.place(relx=0.054, rely=0.11, height=34, width=97)
+
+bStopSim = tk.Button(top, text="Stop", bg = "#FFCCCB", state="disabled")
+bStopSim.place(relx=0.2, rely=0.11, height=34, width=40)
 
 # ---Boolean Indicators---
 #rbSimRunning = tk.Radiobutton(top, text ="")
@@ -203,14 +207,16 @@ carsOutS = 0
 
 # Starts simulation when user clicks 'Run Simulation' button
 def startSim(event=None):
-    global currTime, startTime, currSecond, currCycle
+    global currTime, startTime, currSecond, currCycle, simActive
 
     cycleLengths[0] = int(tTimeNS.get("1.0", "end-1c"));
     cycleLengths[1] = int(tTimeNSGrnArr.get("1.0", "end-1c"));
     cycleLengths[2] = int(tTimeWE.get("1.0", "end-1c"));
     cycleLengths[3] = int(tTimeWEGrnArr.get("1.0", "end-1c"));
 
-    testNumCars = 20 # test number of cars during cycle
+    simActive = True
+    bRunSim["state"] = "disabled"
+    bStopSim["state"] = "normal"
 
     startTime = time.time()
     currTime = time.time() - startTime
@@ -224,227 +230,239 @@ def startSim(event=None):
     elif (currCycle == 3):
         root.after(0, cycleWEGrnArr)
     else:
+        lCurrCycle["text"] = "-"
         currCycle = 0
 
 def cycleNS():
-    global currTime, startTime, currSecond, currCycle, cycleLengths
+    global currTime, startTime, currSecond, currCycle, cycleLengths, simActive
     global carsInN, carsInS, carsOutS, carsOutW, carsOutN, carsOutE
 
-    if (currSecond == 0):
-        carsInN = float(tCarsInN.get("1.0", "end-1c"))
-        carsInS = float(tCarsInS.get("1.0", "end-1c"))
+    if (simActive):
+        if (currSecond == 0):
+            carsInN = float(tCarsInN.get("1.0", "end-1c"))
+            carsInS = float(tCarsInS.get("1.0", "end-1c"))
 
-        carsOutS = float(tCarsOutS.get("1.0", "end-1c"))
-        carsOutW = float(tCarsOutW.get("1.0", "end-1c"))
-        carsOutN = float(tCarsOutN.get("1.0", "end-1c"))
-        carsOutE = float(tCarsOutE.get("1.0", "end-1c"))
+            carsOutS = float(tCarsOutS.get("1.0", "end-1c"))
+            carsOutW = float(tCarsOutW.get("1.0", "end-1c"))
+            carsOutN = float(tCarsOutN.get("1.0", "end-1c"))
+            carsOutE = float(tCarsOutE.get("1.0", "end-1c"))
 
-        lCurrCycle["text"] = "N/S"
+            lCurrCycle["text"] = "N/S"
 
-    if (currTime < cycleLengths[currCycle]):
-        if (currTime > currSecond):
-            lCurrTime["text"] = currSecond + 1
+        if (currTime < cycleLengths[currCycle]):
+            if (currTime > currSecond):
+                lCurrTime["text"] = currSecond + 1
 
-            currRate = (math.tanh(currTime-3) + 1)
+                currRate = (math.tanh(currTime-3) + 1)
 
-            tCarsInN.delete("1.0", tk.END)
-            if (carsInN <= 0):
-                tCarsInN.insert("1.0", 0)
-            else:
-                tCarsOutS.delete("1.0", tk.END)
-                tCarsOutW.delete("1.0", tk.END)
+                tCarsInN.delete("1.0", tk.END)
+                if (carsInN <= 0):
+                    tCarsInN.insert("1.0", 0)
+                else:
+                    tCarsOutS.delete("1.0", tk.END)
+                    tCarsOutW.delete("1.0", tk.END)
 
-                rightLaneCars = currRate * float(tRightN.get("1.0", "end-1c"))
-                straightLaneCars = currRate * float(tStraightN.get("1.0", "end-1c"))
-                carsInN -= (rightLaneCars + straightLaneCars)
-                carsOutS += straightLaneCars
-                carsOutW += rightLaneCars
-                tCarsInN.insert("1.0", round(carsInN))
-                tCarsOutS.insert("1.0", round(carsOutS))
-                tCarsOutW.insert("1.0", round(carsOutW))
+                    rightLaneCars = currRate * float(tRightN.get("1.0", "end-1c"))
+                    straightLaneCars = currRate * float(tStraightN.get("1.0", "end-1c"))
+                    carsInN -= (rightLaneCars + straightLaneCars)
+                    carsOutS += straightLaneCars
+                    carsOutW += rightLaneCars
+                    tCarsInN.insert("1.0", round(carsInN))
+                    tCarsOutS.insert("1.0", round(carsOutS))
+                    tCarsOutW.insert("1.0", round(carsOutW))
 
-            tCarsInS.delete("1.0", tk.END)
-            if (carsInS <= 0):
-                tCarsInS.insert("1.0", 0)
-            else:
-                tCarsOutN.delete("1.0", tk.END)
-                tCarsOutE.delete("1.0", tk.END)
+                tCarsInS.delete("1.0", tk.END)
+                if (carsInS <= 0):
+                    tCarsInS.insert("1.0", 0)
+                else:
+                    tCarsOutN.delete("1.0", tk.END)
+                    tCarsOutE.delete("1.0", tk.END)
 
-                rightLaneCars = currRate * float(tRightS.get("1.0", "end-1c"))
-                straightLaneCars = currRate * float(tStraightS.get("1.0", "end-1c"))
-                carsInS -= (rightLaneCars + straightLaneCars)
-                carsOutN += straightLaneCars
-                carsOutE += rightLaneCars
-                tCarsInS.insert("1.0", round(carsInS))
-                tCarsOutN.insert("1.0", round(carsOutN))
-                tCarsOutE.insert("1.0", round(carsOutE))
+                    rightLaneCars = currRate * float(tRightS.get("1.0", "end-1c"))
+                    straightLaneCars = currRate * float(tStraightS.get("1.0", "end-1c"))
+                    carsInS -= (rightLaneCars + straightLaneCars)
+                    carsOutN += straightLaneCars
+                    carsOutE += rightLaneCars
+                    tCarsInS.insert("1.0", round(carsInS))
+                    tCarsOutN.insert("1.0", round(carsOutN))
+                    tCarsOutE.insert("1.0", round(carsOutE))
 
-            currSecond += 1
-        currTime = time.time() - startTime
-        root.after(sampleDelay, cycleNS)
-    else:
-        currCycle += 1
-        root.after(0, startSim)
+                currSecond += 1
+            currTime = time.time() - startTime
+            root.after(sampleDelay, cycleNS)
+        else:
+            currCycle += 1
+            root.after(0, startSim)
 
 def cycleNSGrnArr():
-    global currTime, startTime, currSecond, currCycle, cycleLengths
+    global currTime, startTime, currSecond, currCycle, cycleLengths, simActive
     global carsInN, carsInS, carsOutE, carsOutW
 
-    if (currSecond == 0):
-        carsInN = float(tCarsInN.get("1.0", "end-1c"))
-        carsInS = float(tCarsInS.get("1.0", "end-1c"))
+    if (simActive):
+        if (currSecond == 0):
+            carsInN = float(tCarsInN.get("1.0", "end-1c"))
+            carsInS = float(tCarsInS.get("1.0", "end-1c"))
 
-        carsOutE = float(tCarsOutE.get("1.0", "end-1c"))
-        carsOutW = float(tCarsOutW.get("1.0", "end-1c"))
+            carsOutE = float(tCarsOutE.get("1.0", "end-1c"))
+            carsOutW = float(tCarsOutW.get("1.0", "end-1c"))
 
-        lCurrCycle["text"] = "N/S Arrow"
+            lCurrCycle["text"] = "N/S Arrow"
 
-    if (currTime < cycleLengths[currCycle]):
-        if (currTime > currSecond):
-            lCurrTime["text"] = currSecond + 1
+        if (currTime < cycleLengths[currCycle]):
+            if (currTime > currSecond):
+                lCurrTime["text"] = currSecond + 1
 
-            currRate = (math.tanh(currTime-3) + 1)
+                currRate = (math.tanh(currTime-3) + 1)
 
-            tCarsInN.delete("1.0", tk.END)
-            if (carsInN <= 0):
-                tCarsInN.insert("1.0", 0)
-            else:
-                tCarsOutE.delete("1.0", tk.END)
+                tCarsInN.delete("1.0", tk.END)
+                if (carsInN <= 0):
+                    tCarsInN.insert("1.0", 0)
+                else:
+                    tCarsOutE.delete("1.0", tk.END)
 
-                leftLaneCars = currRate * float(tLeftN.get("1.0", "end-1c"))
-                carsInN -= leftLaneCars
-                carsOutE += leftLaneCars
-                tCarsInN.insert("1.0", round(carsInN))
-                tCarsOutE.insert("1.0", round(carsOutE))
+                    leftLaneCars = currRate * float(tLeftN.get("1.0", "end-1c"))
+                    carsInN -= leftLaneCars
+                    carsOutE += leftLaneCars
+                    tCarsInN.insert("1.0", round(carsInN))
+                    tCarsOutE.insert("1.0", round(carsOutE))
 
-            tCarsInS.delete("1.0", tk.END)
-            if (carsInS <= 0):
-                tCarsInS.insert("1.0", 0)
-            else:
-                tCarsOutW.delete("1.0", tk.END)
+                tCarsInS.delete("1.0", tk.END)
+                if (carsInS <= 0):
+                    tCarsInS.insert("1.0", 0)
+                else:
+                    tCarsOutW.delete("1.0", tk.END)
 
-                leftLaneCars = currRate * float(tLeftS.get("1.0", "end-1c"))
-                carsInS -= leftLaneCars
-                carsOutW += leftLaneCars
-                tCarsInS.insert("1.0", round(carsInS))
-                tCarsOutW.insert("1.0", round(carsOutW))
+                    leftLaneCars = currRate * float(tLeftS.get("1.0", "end-1c"))
+                    carsInS -= leftLaneCars
+                    carsOutW += leftLaneCars
+                    tCarsInS.insert("1.0", round(carsInS))
+                    tCarsOutW.insert("1.0", round(carsOutW))
 
-            currSecond += 1
-        currTime = time.time() - startTime
-        root.after(sampleDelay, cycleNSGrnArr)
-    else:
-        currCycle += 1
-        root.after(0, startSim)
+                currSecond += 1
+            currTime = time.time() - startTime
+            root.after(sampleDelay, cycleNSGrnArr)
+        else:
+            currCycle += 1
+            root.after(0, startSim)
 
 def cycleWE():
-    global currTime, startTime, currSecond, currCycle, cycleLengths
+    global currTime, startTime, currSecond, currCycle, cycleLengths, simActive
     global carsInW, carsInE, carsOutE, carsOutS, carsOutW, carsOutN
 
-    if (currSecond == 0):
-        carsInW = float(tCarsInW.get("1.0", "end-1c"))
-        carsInE = float(tCarsInE.get("1.0", "end-1c"))
+    if (simActive):
+        if (currSecond == 0):
+            carsInW = float(tCarsInW.get("1.0", "end-1c"))
+            carsInE = float(tCarsInE.get("1.0", "end-1c"))
 
-        carsOutE = float(tCarsOutE.get("1.0", "end-1c"))
-        carsOutS = float(tCarsOutS.get("1.0", "end-1c"))
-        carsOutW = float(tCarsOutW.get("1.0", "end-1c"))
-        carsOutN = float(tCarsOutN.get("1.0", "end-1c"))
+            carsOutE = float(tCarsOutE.get("1.0", "end-1c"))
+            carsOutS = float(tCarsOutS.get("1.0", "end-1c"))
+            carsOutW = float(tCarsOutW.get("1.0", "end-1c"))
+            carsOutN = float(tCarsOutN.get("1.0", "end-1c"))
 
-        lCurrCycle["text"] = "W/E"
+            lCurrCycle["text"] = "W/E"
 
-    if (currTime < cycleLengths[currCycle]):
-        if (currTime > currSecond):
-            lCurrTime["text"] = currSecond + 1
+        if (currTime < cycleLengths[currCycle]):
+            if (currTime > currSecond):
+                lCurrTime["text"] = currSecond + 1
 
-            currRate = (math.tanh(currTime-3) + 1)
+                currRate = (math.tanh(currTime-3) + 1)
 
-            tCarsInW.delete("1.0", tk.END)
-            if (carsInW <= 0):
-                tCarsInW.insert("1.0", 0)
-            else:
-                tCarsOutE.delete("1.0", tk.END)
-                tCarsOutS.delete("1.0", tk.END)
+                tCarsInW.delete("1.0", tk.END)
+                if (carsInW <= 0):
+                    tCarsInW.insert("1.0", 0)
+                else:
+                    tCarsOutE.delete("1.0", tk.END)
+                    tCarsOutS.delete("1.0", tk.END)
 
-                rightLaneCars = currRate * float(tRightW.get("1.0", "end-1c"))
-                straightLaneCars = currRate * float(tStraightW.get("1.0", "end-1c"))
-                carsInW -= (rightLaneCars + straightLaneCars)
-                carsOutE += straightLaneCars
-                carsOutS += rightLaneCars
-                tCarsInW.insert("1.0", round(carsInW))
-                tCarsOutE.insert("1.0", round(carsOutE))
-                tCarsOutS.insert("1.0", round(carsOutS))
+                    rightLaneCars = currRate * float(tRightW.get("1.0", "end-1c"))
+                    straightLaneCars = currRate * float(tStraightW.get("1.0", "end-1c"))
+                    carsInW -= (rightLaneCars + straightLaneCars)
+                    carsOutE += straightLaneCars
+                    carsOutS += rightLaneCars
+                    tCarsInW.insert("1.0", round(carsInW))
+                    tCarsOutE.insert("1.0", round(carsOutE))
+                    tCarsOutS.insert("1.0", round(carsOutS))
 
-            tCarsInE.delete("1.0", tk.END)
-            if (carsInE <= 0):
-                tCarsInE.insert("1.0", 0)
-            else:
-                tCarsOutW.delete("1.0", tk.END)
-                tCarsOutN.delete("1.0", tk.END)
+                tCarsInE.delete("1.0", tk.END)
+                if (carsInE <= 0):
+                    tCarsInE.insert("1.0", 0)
+                else:
+                    tCarsOutW.delete("1.0", tk.END)
+                    tCarsOutN.delete("1.0", tk.END)
 
-                rightLaneCars = currRate * float(tRightE.get("1.0", "end-1c"))
-                straightLaneCars = currRate * float(tStraightE.get("1.0", "end-1c"))
-                carsInE -= (rightLaneCars + straightLaneCars)
-                carsOutW += straightLaneCars
-                carsOutN += rightLaneCars
-                tCarsInE.insert("1.0", round(carsInE))
-                tCarsOutW.insert("1.0", round(carsOutW))
-                tCarsOutN.insert("1.0", round(carsOutN))
+                    rightLaneCars = currRate * float(tRightE.get("1.0", "end-1c"))
+                    straightLaneCars = currRate * float(tStraightE.get("1.0", "end-1c"))
+                    carsInE -= (rightLaneCars + straightLaneCars)
+                    carsOutW += straightLaneCars
+                    carsOutN += rightLaneCars
+                    tCarsInE.insert("1.0", round(carsInE))
+                    tCarsOutW.insert("1.0", round(carsOutW))
+                    tCarsOutN.insert("1.0", round(carsOutN))
 
-            currSecond += 1
-        currTime = time.time() - startTime
-        root.after(sampleDelay, cycleWE)
-    else:
-        currCycle += 1
-        root.after(0, startSim)
+                currSecond += 1
+            currTime = time.time() - startTime
+            root.after(sampleDelay, cycleWE)
+        else:
+            currCycle += 1
+            root.after(0, startSim)
 
 def cycleWEGrnArr():
-    global currTime, startTime, currSecond, currCycle, cycleLengths
+    global currTime, startTime, currSecond, currCycle, cycleLengths, simActive
     global carsInW, carsInE, carsOutN, carsOutS
 
-    if (currSecond == 0):
-        carsInW = float(tCarsInW.get("1.0", "end-1c"))
-        carsInE = float(tCarsInE.get("1.0", "end-1c"))
+    if (simActive):
+        if (currSecond == 0):
+            carsInW = float(tCarsInW.get("1.0", "end-1c"))
+            carsInE = float(tCarsInE.get("1.0", "end-1c"))
 
-        carsOutN= float(tCarsOutN.get("1.0", "end-1c"))
-        carsOutS = float(tCarsOutS.get("1.0", "end-1c"))
+            carsOutN= float(tCarsOutN.get("1.0", "end-1c"))
+            carsOutS = float(tCarsOutS.get("1.0", "end-1c"))
 
-        lCurrCycle["text"] = "W/ES Arrow"
+            lCurrCycle["text"] = "W/E Arrow"
 
-    if (currTime < cycleLengths[currCycle]):
-        if (currTime > currSecond):
-            lCurrTime["text"] = currSecond + 1
+        if (currTime < cycleLengths[currCycle]):
+            if (currTime > currSecond):
+                lCurrTime["text"] = currSecond + 1
 
-            currRate = (math.tanh(currTime-3) + 1)
+                currRate = (math.tanh(currTime-3) + 1)
 
-            tCarsInW.delete("1.0", tk.END)
-            if (carsInW <= 0):
-                tCarsInW.insert("1.0", 0)
-            else:
-                tCarsOutN.delete("1.0", tk.END)
+                tCarsInW.delete("1.0", tk.END)
+                if (carsInW <= 0):
+                    tCarsInW.insert("1.0", 0)
+                else:
+                    tCarsOutN.delete("1.0", tk.END)
 
-                leftLaneCars = currRate * float(tLeftW.get("1.0", "end-1c"))
-                carsInW -= leftLaneCars
-                carsOutN += leftLaneCars
-                tCarsInW.insert("1.0", round(carsInW))
-                tCarsOutN.insert("1.0", round(carsOutN))
+                    leftLaneCars = currRate * float(tLeftW.get("1.0", "end-1c"))
+                    carsInW -= leftLaneCars
+                    carsOutN += leftLaneCars
+                    tCarsInW.insert("1.0", round(carsInW))
+                    tCarsOutN.insert("1.0", round(carsOutN))
 
-            tCarsInE.delete("1.0", tk.END)
-            if (carsInE <= 0):
-                tCarsInE.insert("1.0", 0)
-            else:
-                tCarsOutS.delete("1.0", tk.END)
+                tCarsInE.delete("1.0", tk.END)
+                if (carsInE <= 0):
+                    tCarsInE.insert("1.0", 0)
+                else:
+                    tCarsOutS.delete("1.0", tk.END)
 
-                leftLaneCars = currRate * float(tLeftE.get("1.0", "end-1c"))
-                carsInE -= leftLaneCars
-                carsOutS += leftLaneCars
-                tCarsInE.insert("1.0", round(carsInE))
-                tCarsOutS.insert("1.0", round(carsOutS))
+                    leftLaneCars = currRate * float(tLeftE.get("1.0", "end-1c"))
+                    carsInE -= leftLaneCars
+                    carsOutS += leftLaneCars
+                    tCarsInE.insert("1.0", round(carsInE))
+                    tCarsOutS.insert("1.0", round(carsOutS))
 
-            currSecond += 1
-        currTime = time.time() - startTime
-        root.after(sampleDelay, cycleWEGrnArr)
-    else:
-        currCycle += 1
-        root.after(0, startSim)
+                currSecond += 1
+            currTime = time.time() - startTime
+            root.after(sampleDelay, cycleWEGrnArr)
+        else:
+            currCycle += 1
+            root.after(0, startSim)
+
+# Stops the simulation if running
+def stopSim(event=None):
+    global simActive
+    simActive = False
+    bRunSim["state"] = "normal"
+    bStopSim["state"] = "disabled"
 
 # Updates flow rate scalar based on scenario selection
 def scenarioChange(*args):
@@ -460,6 +478,7 @@ def scenarioChange(*args):
 
 # CALLBACK BINDINGS
 bRunSim.bind("<Button-1>", startSim)
+bStopSim.bind("<Button-1>", stopSim)
 
 currScenario.trace('w', scenarioChange)
 
