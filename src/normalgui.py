@@ -28,6 +28,22 @@ top.create_text((555, 290), text="Scenarios", font="MSGothic 15 bold", fill="#06
 top.create_text((363, 6), text="Cycle", font="MSGothic 8 bold", fill="#065535", anchor="nw")
 top.create_text((442, 6), text="Time (s)", font="MSGothic 8 bold", fill="#065535", anchor="nw")
 
+# 'Cars In/Cars' Out text labels from West
+top.create_text((38, 215), text="Cars In", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((38, 290), text="Cars Out", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+
+# 'Cars In/Cars Out' text labels from North
+top.create_text((223, 58), text="Cars In", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((299, 58), text="Cars Out", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+
+# 'Cars In/Cars' Out text labels from East
+top.create_text((481, 215), text="Cars In", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((481, 290), text="Cars Out", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+
+# 'Cars In/Cars Out' text labels from South
+top.create_text((223, 456), text="Cars In", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((299, 456), text="Cars Out", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+
 root.geometry("739x535+503+155")
 root.minsize(120, 1)
 root.maxsize(1924, 1061)
@@ -55,10 +71,21 @@ lTimeNSGrnArr = tk.Label(fTiming, text="N-S Green Arrow", bg="#707070", anchor="
 lTimeWE = tk.Label(fTiming, text="W-E", bg="#707070", anchor="nw")
 lTimeWEGrnArr = tk.Label(fTiming, text="W-E Green Arrow", bg="#707070", anchor="nw")
 
+# Seconds labels
+lSecondsNS = tk.Label(fTiming, text="s", bg="#707070", anchor="nw")
+lSecondsNSGrnArr = tk.Label(fTiming, text="s", bg="#707070", anchor="nw")
+lSecondsWE = tk.Label(fTiming, text="s", bg="#707070", anchor="nw")
+lSecondsWEGrnArr = tk.Label(fTiming, text="s", bg="#707070", anchor="nw")
+
 lTimeNS.place(relx=0.05, rely=0.05, height=20, width=100)
 lTimeNSGrnArr.place(relx=0.05, rely=0.275, height=20, width=100)
 lTimeWE.place(relx=0.05, rely=0.5, height=20, width=100)
 lTimeWEGrnArr.place(relx=0.05, rely=0.725, height=20, width=100)
+
+lSecondsNS.place(relx=0.9, rely=0.05, height=20, width=15)
+lSecondsNSGrnArr.place(relx=0.9, rely=0.275, height=20, width=15)
+lSecondsWE.place(relx=0.9, rely=0.5, height=20, width=15)
+lSecondsWEGrnArr.place(relx=0.9, rely=0.725, height=20, width=15)
 
 # Current Time Indicator
 lCurrTime = tk.Label(top, anchor="nw")
@@ -95,11 +122,11 @@ tTimeWEGrnArr.insert('1.0', '15')
 tCarsInW.place(relx=0.05, rely=0.57, relheight=0.045, relwidth=0.06)
 tCarsInN.place(relx=0.3, rely=0.135, relheight=0.045, relwidth=0.06)
 tCarsInE.place(relx=0.65, rely=0.43, relheight=0.045, relwidth=0.06)
-tCarsInS.place(relx=0.404, rely=0.86, relheight=0.045, relwidth=0.06)
+tCarsInS.place(relx=0.404, rely=0.88, relheight=0.045, relwidth=0.06)
 tCarsOutW.place(relx=0.05, rely=0.43, relheight=0.045, relwidth=0.06)
 tCarsOutN.place(relx=0.404, rely=0.135, relheight=0.045, relwidth=0.06)
 tCarsOutE.place(relx=0.65, rely=0.57, relheight=0.045, relwidth=0.06)
-tCarsOutS.place(relx=0.3, rely=0.86, relheight=0.045, relwidth=0.06)
+tCarsOutS.place(relx=0.3, rely=0.88, relheight=0.045, relwidth=0.06)
 
 tTimeNS.place(relx=0.65, rely=0.05, height=20, width=45)
 tTimeNSGrnArr.place(relx=0.65, rely=0.275, height=20, width=45)
@@ -230,7 +257,11 @@ def startSim(event=None):
     elif (currCycle == 3):
         root.after(0, cycleWEGrnArr)
     else:
+        simActive = False
+        bRunSim["state"] = "normal"
+        bStopSim["state"] = "disabled"
         lCurrCycle["text"] = "-"
+        lCurrTime["text"] = 0
         currCycle = 0
 
 def cycleNS():
