@@ -69,10 +69,10 @@ tCarsInW = tk.Text(top)
 tCarsInN = tk.Text(top)
 tCarsInE = tk.Text(top)
 tCarsInS = tk.Text(top)
-tCarsOutW = tk.Text(top, state="disabled")
-tCarsOutN = tk.Text(top, state="disabled")
-tCarsOutE = tk.Text(top, state="disabled")
-tCarsOutS = tk.Text(top, state="disabled")
+tCarsOutW = tk.Text(top, state="disabled", bg = "#C8E2BB")
+tCarsOutN = tk.Text(top, state="disabled", bg = "#C8E2BB")
+tCarsOutE = tk.Text(top, state="disabled", bg = "#C8E2BB")
+tCarsOutS = tk.Text(top, state="disabled", bg = "#C8E2BB")
 
 # 'Cycle times' text fields
 tTimeNS = tk.Text(fTiming)
@@ -99,10 +99,61 @@ tTimeNSGrnArr.place(relx=0.65, rely=0.275, height=20, width=45)
 tTimeWE.place(relx=0.65, rely=0.5, height=20, width=45)
 tTimeWEGrnArr.place(relx=0.65, rely=0.725, height=20, width=45)
 
+# Lane percentages
+tRightW = tk.Text(lIntersection, bg="#90EEBF")
+tStraightW = tk.Text(lIntersection, bg="#90EEBF")
+tLeftW = tk.Text(lIntersection, bg="#90EEBF")
+
+tRightN = tk.Text(lIntersection, bg="#90EEBF")
+tStraightN = tk.Text(lIntersection, bg="#90EEBF")
+tLeftN = tk.Text(lIntersection, bg="#90EEBF")
+
+tRightE = tk.Text(lIntersection, bg="#90EEBF")
+tStraightE = tk.Text(lIntersection, bg="#90EEBF")
+tLeftE = tk.Text(lIntersection, bg="#90EEBF")
+
+tRightS = tk.Text(lIntersection, bg="#90EEBF")
+tStraightS = tk.Text(lIntersection, bg="#90EEBF")
+tLeftS = tk.Text(lIntersection, bg="#90EEBF")
+
+tRightW.place(relx=0.06, rely=0.663, height=20, width=20)
+tStraightW.place(relx=0.06, rely=0.589, height=20, width=20)
+tLeftW.place(relx=0.06, rely=0.513, height=20, width=20)
+
+tRightN.place(relx=0.305, rely=0.04, height=20, width=20)
+tStraightN.place(relx=0.374, rely=0.04, height=20, width=20)
+tLeftN.place(relx=0.442, rely=0.04, height=20, width=20)
+
+tRightE.place(relx=0.89, rely=0.29, height=20, width=20)
+tStraightE.place(relx=0.89, rely=0.366, height=20, width=20)
+tLeftE.place(relx=0.89, rely=0.438, height=20, width=20)
+
+tRightS.place(relx=0.645, rely=0.915, height=20, width=20)
+tStraightS.place(relx=0.577, rely=0.915, height=20, width=20)
+tLeftS.place(relx=0.51, rely=0.915, height=20, width=20)
+
+tRightW.insert('1.0', '.2')
+tStraightW.insert('1.0', '.7')
+tLeftW.insert('1.0', '.1')
+
+tRightN.insert('1.0', '.2')
+tStraightN.insert('1.0', '.7')
+tLeftN.insert('1.0', '.1')
+
+tRightE.insert('1.0', '.2')
+tStraightE.insert('1.0', '.7')
+tLeftE.insert('1.0', '.1')
+
+tRightS.insert('1.0', '.2')
+tStraightS.insert('1.0', '.7')
+tLeftS.insert('1.0', '.1')
+
+
+# Scenarios
 currScenario = tk.StringVar(top)
 currScenario.set("None") # set default scenario to 'None'
 
-# 'Scenarios' drop down menu
+# Drop down menu
 scenarios = tk.OptionMenu(top, currScenario, "None", "Construction", "Weather", "Accident")
 scenarios.place(relx=0.75, rely=0.6, height=25, width=125)
 
