@@ -80,6 +80,11 @@ tTimeNSGrnArr = tk.Text(fTiming)
 tTimeWE = tk.Text(fTiming)
 tTimeWEGrnArr = tk.Text(fTiming)
 
+tTimeNS.insert('1.0', '0')
+tTimeNSGrnArr.insert('1.0', '0')
+tTimeWE.insert('1.0', '0')
+tTimeWEGrnArr.insert('1.0', '0')
+
 tCarsInW.place(relx=0.05, rely=0.57, relheight=0.045, relwidth=0.06)
 tCarsInN.place(relx=0.3, rely=0.135, relheight=0.045, relwidth=0.06)
 tCarsInE.place(relx=0.65, rely=0.43, relheight=0.045, relwidth=0.06)
@@ -115,18 +120,24 @@ bRunSim.place(relx=0.054, rely=0.11, height=34, width=97)
 #-------------------------------------------------------------------------------
 # CALLBACK FUNCTIONS
 
-testCycleLength = 0 # test cycle length of 15 seconds
-testNumCars = 0 # test number of cars during cycle
+testCycleLength = 15
+cycleLengths = [0, 0, 0, 0] # test cycle length of 15 seconds
+numCars = [] # test number of cars during cycle
 
 startTime = 0
 currTime = 0
 currSecond = 0
+currCycle = 0
 
 # Starts simulation when user clicks 'Run Simulation' button
 def startSim(event):
     global currTime, startTime, currSecond, testCycleLength, testNumCars
 
-    testCycleLength = 15 # test cycle length of 15 seconds
+    cycleLengths[0] = int(tTimeNS.get("1.0", "end-1c"));
+    cycleLengths[1] = int(tTimeNSGrnArr.get("1.0", "end-1c"));
+    cycleLengths[2] = int(tTimeWE.get("1.0", "end-1c"));
+    cycleLengths[3] = int(tTimeWEGrnArr.get("1.0", "end-1c"));
+
     testNumCars = 20 # test number of cars during cycle
 
     startTime = time.time()
@@ -135,19 +146,25 @@ def startSim(event):
     root.after(0, cycle)
 
 def cycle():
-    global currTime, startTime, currSecond, testCycleLength, testNumCars
+    global currTime, startTime, currSecond, currCycle, testCycleLength, testNumCars
 
     lCurrTime["text"] = round(currTime)
-    if(currTime < testCycleLength):
+    if (currTime < cycleLengths[currCycle]):
         if (currTime > currSecond):
             currRate = (math.tanh(currTime-3) + 1)
-            testNumCars -= currRate
+            if (testNumCars < 0):
+                testNumCars = 0
+            else:
+                testNumCars -= currRate
             currSecond += 1
-
-            print(testNumCars)
         currTime = time.time() - startTime
         root.after(sampleDelay, cycle)
-    #print(tTimeNS.get("1.0", "end-1c"))
+    else:
+        if (currCyle == 3):
+            currCycle = 0
+        else:
+            currCycle += 1
+            root.after(0, startSim)
 
 # Updates flow rate scalar based on scenario selection
 def scenarioChange(*args):
