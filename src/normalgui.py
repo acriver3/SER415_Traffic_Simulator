@@ -13,6 +13,7 @@ root = tkinter.Tk()
 #-------------------------------------------------------------------------------
 # GLOBALS:
 flowRateScalar = 1;     # used to change flow rate for specific scenarios
+maxFlowRate = 1;        # used to scale max flow rate (default flow rate = 2)
 sampleDelay = 500;      # delay between samples
 simActive = False;      # boolean for checking if simulation is active
 
@@ -24,13 +25,14 @@ top = tk.Canvas(root, width=739, height=535, bg="#C0C5C6")
 top.pack();
 top.create_text((20, 10), text="Traffic Simulator", font="MSGothic 20 bold", fill="#065535", anchor="nw")
 top.create_text((500, 50), text="Cycle Timing", font="MSGothic 15 bold", fill="#065535", anchor="nw")
-top.create_text((555, 290), text="Scenarios", font="MSGothic 15 bold", fill="#065535", anchor="nw")
+top.create_text((572, 293), text="Scenarios", font="MSGothic 15 bold", fill="#065535", anchor="nw")
+top.create_text((573, 241), text="Max Flow Rate", font="MSGothic 8 bold", fill="#065535", anchor="nw")
 top.create_text((363, 6), text="Cycle", font="MSGothic 8 bold", fill="#065535", anchor="nw")
 top.create_text((442, 6), text="Time (s)", font="MSGothic 8 bold", fill="#065535", anchor="nw")
 
 # 'Cars In/Cars' Out text labels from West
-top.create_text((38, 215), text="Cars In", font="MSGothic 8 bold", fill="#065535", anchor="nw")
-top.create_text((38, 290), text="Cars Out", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((38, 215), text="Cars Out", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((38, 290), text="Cars In", font="MSGothic 8 bold", fill="#065535", anchor="nw")
 
 # 'Cars In/Cars Out' text labels from North
 top.create_text((223, 58), text="Cars In", font="MSGothic 8 bold", fill="#065535", anchor="nw")
@@ -41,15 +43,15 @@ top.create_text((481, 215), text="Cars In", font="MSGothic 8 bold", fill="#06553
 top.create_text((481, 290), text="Cars Out", font="MSGothic 8 bold", fill="#065535", anchor="nw")
 
 # 'Cars In/Cars Out' text labels from South
-top.create_text((223, 456), text="Cars In", font="MSGothic 8 bold", fill="#065535", anchor="nw")
-top.create_text((299, 456), text="Cars Out", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((223, 456), text="Cars Out", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((299, 456), text="Cars In", font="MSGothic 8 bold", fill="#065535", anchor="nw")
 
 root.geometry("739x535+503+155")
 root.minsize(120, 1)
 root.maxsize(1924, 1061)
 root.resizable(0, 0)
 root.title("Traffic Simulator GUI")
-root.configure(background="#d9d9d9")
+root.configure(background="#D9D9D9")
 
 main_bg = tk.PhotoImage(file="../resources/intersection.png")
 
@@ -88,12 +90,12 @@ lSecondsWE.place(relx=0.9, rely=0.5, height=20, width=15)
 lSecondsWEGrnArr.place(relx=0.9, rely=0.725, height=20, width=15)
 
 # Current Time Indicator
-lCurrTime = tk.Label(top, anchor="nw")
+lCurrTime = tk.Label(top, bg = "#C8E2BB", anchor="nw")
 lCurrTime.place(relx=0.60, rely=0.04, height=20, width=30)
 lCurrTime["text"] = 0
 
 # Current Cycle Indicator
-lCurrCycle = tk.Label(top, anchor="nw")
+lCurrCycle = tk.Label(top, bg = "#C8E2BB", anchor="nw")
 lCurrCycle.place(relx=0.49, rely=0.04, height=25, width=70)
 lCurrCycle["text"] = "-"
 
@@ -142,7 +144,7 @@ tCarsOutN.insert('1.0', '0')
 tCarsOutE.insert('1.0', '0')
 tCarsOutS.insert('1.0', '0')
 
-# Lane percentages
+# Lane percentages text field
 tRightW = tk.Text(lIntersection, bg="#90EEBF")
 tStraightW = tk.Text(lIntersection, bg="#90EEBF")
 tLeftW = tk.Text(lIntersection, bg="#90EEBF")
@@ -191,6 +193,10 @@ tRightS.insert('1.0', '.2')
 tStraightS.insert('1.0', '.7')
 tLeftS.insert('1.0', '.1')
 
+# 'Max flow rate' input text fields
+tMaxFlowRate = tk.Text(top)
+tMaxFlowRate.place(relx=0.775, rely=0.48, height=25, width=40)
+tMaxFlowRate.insert('1.0', '2.0')
 
 # Scenarios
 currScenario = tk.StringVar(top)
@@ -198,7 +204,7 @@ currScenario.set("None") # set default scenario to 'None'
 
 # Drop down menu
 scenarios = tk.OptionMenu(top, currScenario, "None", "Construction", "Weather", "Accident")
-scenarios.place(relx=0.75, rely=0.6, height=25, width=125)
+scenarios.place(relx=0.775, rely=0.6, height=25, width=125)
 
 # ---Buttons---
 # 'Run Simulation' button
@@ -284,7 +290,8 @@ def cycleNS():
             if (currTime > currSecond):
                 lCurrTime["text"] = currSecond + 1
 
-                currRate = (math.tanh(currTime-3) + 1)
+                currRate = calculateCurrRate(currTime)
+                print(currRate)
 
                 tCarsInN.delete("1.0", tk.END)
                 if (carsInN <= 0):
@@ -343,7 +350,7 @@ def cycleNSGrnArr():
             if (currTime > currSecond):
                 lCurrTime["text"] = currSecond + 1
 
-                currRate = (math.tanh(currTime-3) + 1)
+                currRate = calculateCurrRate(currTime)
 
                 tCarsInN.delete("1.0", tk.END)
                 if (carsInN <= 0):
@@ -396,7 +403,7 @@ def cycleWE():
             if (currTime > currSecond):
                 lCurrTime["text"] = currSecond + 1
 
-                currRate = (math.tanh(currTime-3) + 1)
+                currRate = calculateCurrRate(currTime)
 
                 tCarsInW.delete("1.0", tk.END)
                 if (carsInW <= 0):
@@ -455,7 +462,7 @@ def cycleWEGrnArr():
             if (currTime > currSecond):
                 lCurrTime["text"] = currSecond + 1
 
-                currRate = (math.tanh(currTime-3) + 1)
+                currRate = calculateCurrRate(currTime)
 
                 tCarsInW.delete("1.0", tk.END)
                 if (carsInW <= 0):
@@ -494,6 +501,12 @@ def stopSim(event=None):
     simActive = False
     bRunSim["state"] = "normal"
     bStopSim["state"] = "disabled"
+
+# Returns the traffic flow rate at a specific time since GREEN light activated
+def calculateCurrRate(t):
+    global maxFlowRate
+    maxFlowRate = float(tMaxFlowRate.get("1.0", "end-1c")) / 2
+    return (maxFlowRate * (math.tanh(t-3) + 1))
 
 # Updates flow rate scalar based on scenario selection
 def scenarioChange(*args):
