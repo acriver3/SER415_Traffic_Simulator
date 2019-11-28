@@ -21,32 +21,37 @@ simActive = False;      # boolean for checking if simulation is active
 # GUI SETUP:
 
 # ---Canvas---
-top = tk.Canvas(root, width=739, height=535, bg="#C0C5C6")
+top = tk.Canvas(root, width=850, height=625, bg="#C0C5C6")
 top.pack();
 top.create_text((20, 10), text="Traffic Simulator", font="MSGothic 20 bold", fill="#065535", anchor="nw")
-top.create_text((500, 50), text="Cycle Timing", font="MSGothic 15 bold", fill="#065535", anchor="nw")
-top.create_text((572, 293), text="Scenarios", font="MSGothic 15 bold", fill="#065535", anchor="nw")
-top.create_text((573, 241), text="Max Flow Rate", font="MSGothic 8 bold", fill="#065535", anchor="nw")
-top.create_text((363, 6), text="Cycle", font="MSGothic 8 bold", fill="#065535", anchor="nw")
-top.create_text((442, 6), text="Time (s)", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((570, 98), text="Cycle Timing", font="MSGothic 15 bold", fill="#065535", anchor="nw")
+top.create_text((660, 347), text="Scenarios", font="MSGothic 15 bold", fill="#065535", anchor="nw")
+top.create_text((660, 280), text="Max Outflow Rate", font="MSGothic 10 bold", fill="#065535", anchor="nw")
+top.create_text((703, 303), text="cars/sec", font="MSGothic 8", fill="#065535", anchor="nw")
+top.create_text((340, 54), text="Cycle", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((434, 54), text="Time (s)", font="MSGothic 8 bold", fill="#065535", anchor="nw")
 
 # 'Cars In/Cars' Out text labels from West
-top.create_text((38, 215), text="Cars Out", font="MSGothic 8 bold", fill="#065535", anchor="nw")
-top.create_text((38, 290), text="Cars In", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((43, 354), text="Cars In", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((43, 296), text="Cars Out", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((43, 396), text="Inflow Rate", font="MSGothic 8 bold", fill="#065535", anchor="nw")
 
 # 'Cars In/Cars Out' text labels from North
-top.create_text((223, 58), text="Cars In", font="MSGothic 8 bold", fill="#065535", anchor="nw")
-top.create_text((299, 58), text="Cars Out", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((236, 141), text="Cars In", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((309, 141), text="Cars Out", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((236, 100), text="Inflow Rate", font="MSGothic 8 bold", fill="#065535", anchor="nw")
 
 # 'Cars In/Cars' Out text labels from East
-top.create_text((481, 215), text="Cars In", font="MSGothic 8 bold", fill="#065535", anchor="nw")
-top.create_text((481, 290), text="Cars Out", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((497, 279), text="Cars In", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((497, 368), text="Cars Out", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((497, 321), text="Inflow Rate", font="MSGothic 8 bold", fill="#065535", anchor="nw")
 
 # 'Cars In/Cars Out' text labels from South
-top.create_text((223, 456), text="Cars Out", font="MSGothic 8 bold", fill="#065535", anchor="nw")
-top.create_text((299, 456), text="Cars In", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((309, 532), text="Cars In", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((237, 532), text="Cars Out", font="MSGothic 8 bold", fill="#065535", anchor="nw")
+top.create_text((309, 573), text="Inflow Rate", font="MSGothic 8 bold", fill="#065535", anchor="nw")
 
-root.geometry("739x535+503+155")
+root.geometry("850x625+503+155")
 root.minsize(120, 1)
 root.maxsize(1924, 1061)
 root.resizable(0, 0)
@@ -59,13 +64,13 @@ main_bg = tk.PhotoImage(file="../resources/intersection.png")
 # ---Frames---
 # Timing value input frame
 fTiming = tk.Frame(top, bg="#707070", highlightbackground="#065535", highlightthickness=3)
-fTiming.place(relx=0.67, rely=0.15, relheight=0.215, relwidth=0.277)
+fTiming.place(relx=0.67, rely=0.2, relheight=0.215, relwidth=0.277)
 
 
 # ---Labels---
 # Intersection image
 lIntersection = tk.Label(top, image=main_bg)
-lIntersection.place(relx=0.13, rely=0.2, height=341, width=371)
+lIntersection.place(relx=0.13, rely=0.3, height=341, width=371)
 
 # Timing value input labels
 lTimeNS = tk.Label(fTiming, text="N-S", bg="#707070", anchor="nw")
@@ -91,12 +96,12 @@ lSecondsWEGrnArr.place(relx=0.9, rely=0.725, height=20, width=15)
 
 # Current Time Indicator
 lCurrTime = tk.Label(top, bg = "#C8E2BB", anchor="nw")
-lCurrTime.place(relx=0.60, rely=0.04, height=20, width=30)
+lCurrTime.place(relx=0.51, rely=0.11, height=20, width=30)
 lCurrTime["text"] = 0
 
 # Current Cycle Indicator
 lCurrCycle = tk.Label(top, bg = "#C8E2BB", anchor="nw")
-lCurrCycle.place(relx=0.49, rely=0.04, height=25, width=70)
+lCurrCycle.place(relx=0.4, rely=0.11, height=25, width=70)
 lCurrCycle["text"] = "-"
 
 # ---Text fields---
@@ -121,14 +126,14 @@ tTimeNSGrnArr.insert('1.0', '15')
 tTimeWE.insert('1.0', '15')
 tTimeWEGrnArr.insert('1.0', '15')
 
-tCarsInW.place(relx=0.05, rely=0.57, relheight=0.045, relwidth=0.06)
-tCarsInN.place(relx=0.3, rely=0.135, relheight=0.045, relwidth=0.06)
-tCarsInE.place(relx=0.65, rely=0.43, relheight=0.045, relwidth=0.06)
-tCarsInS.place(relx=0.404, rely=0.88, relheight=0.045, relwidth=0.06)
-tCarsOutW.place(relx=0.05, rely=0.43, relheight=0.045, relwidth=0.06)
-tCarsOutN.place(relx=0.404, rely=0.135, relheight=0.045, relwidth=0.06)
-tCarsOutE.place(relx=0.65, rely=0.57, relheight=0.045, relwidth=0.06)
-tCarsOutS.place(relx=0.3, rely=0.88, relheight=0.045, relwidth=0.06)
+tCarsInW.place(relx=0.05, rely=0.59, relheight=0.035, relwidth=0.06)
+tCarsInN.place(relx=0.278, rely=0.25, relheight=0.035, relwidth=0.06)
+tCarsInE.place(relx=0.585, rely=0.47, relheight=0.035, relwidth=0.06)
+tCarsInS.place(relx=0.363, rely=0.875, relheight=0.035, relwidth=0.06)
+tCarsOutW.place(relx=0.05, rely=0.498, relheight=0.035, relwidth=0.06)
+tCarsOutN.place(relx=0.363, rely=0.25, relheight=0.035, relwidth=0.06)
+tCarsOutE.place(relx=0.585, rely=0.612, relheight=0.035, relwidth=0.06)
+tCarsOutS.place(relx=0.278, rely=0.875, relheight=0.035, relwidth=0.06)
 
 tTimeNS.place(relx=0.65, rely=0.05, height=20, width=45)
 tTimeNSGrnArr.place(relx=0.65, rely=0.275, height=20, width=45)
@@ -143,6 +148,22 @@ tCarsOutW.insert('1.0', '0')
 tCarsOutN.insert('1.0', '0')
 tCarsOutE.insert('1.0', '0')
 tCarsOutS.insert('1.0', '0')
+
+# 'Inflow' rates
+tInflowW = tk.Text(top)
+tInflowN = tk.Text(top)
+tInflowE = tk.Text(top)
+tInflowS = tk.Text(top)
+
+tInflowW.place(relx=0.05, rely=0.657, relheight=0.035, relwidth=0.06)
+tInflowN.place(relx=0.278, rely=0.185, relheight=0.035, relwidth=0.06)
+tInflowE.place(relx=0.585, rely=0.5375, relheight=0.035, relwidth=0.06)
+tInflowS.place(relx=0.363, rely=0.940, relheight=0.035, relwidth=0.06)
+
+tInflowW.insert('1.0', '0.2')
+tInflowN.insert('1.0', '0.2')
+tInflowE.insert('1.0', '0.2')
+tInflowS.insert('1.0', '0.2')
 
 # Lane percentages text field
 tRightW = tk.Text(lIntersection, bg="#90EEBF")
@@ -212,7 +233,7 @@ bRunSim = tk.Button(top, text="Run Simulation", bg = "#90EE90")
 bRunSim.place(relx=0.054, rely=0.11, height=34, width=97)
 
 bStopSim = tk.Button(top, text="Stop", bg = "#FFCCCB", state="disabled")
-bStopSim.place(relx=0.2, rely=0.11, height=34, width=40)
+bStopSim.place(relx=0.18, rely=0.11, height=34, width=40)
 
 # ---Boolean Indicators---
 #rbSimRunning = tk.Radiobutton(top, text ="")
@@ -288,10 +309,11 @@ def cycleNS():
 
         if (currTime < cycleLengths[currCycle]):
             if (currTime > currSecond):
+                inflowCars()
+
                 lCurrTime["text"] = currSecond + 1
 
                 currRate = calculateCurrRate(currTime)
-                print(currRate)
 
                 tCarsInN.delete("1.0", tk.END)
                 if (carsInN <= 0):
@@ -305,9 +327,9 @@ def cycleNS():
                     carsInN -= (rightLaneCars + straightLaneCars)
                     carsOutS += straightLaneCars
                     carsOutW += rightLaneCars
-                    tCarsInN.insert("1.0", round(carsInN))
-                    tCarsOutS.insert("1.0", round(carsOutS))
-                    tCarsOutW.insert("1.0", round(carsOutW))
+                    tCarsInN.insert("1.0", math.floor(carsInN))
+                    tCarsOutS.insert("1.0", math.floor(carsOutS))
+                    tCarsOutW.insert("1.0", math.floor(carsOutW))
 
                 tCarsInS.delete("1.0", tk.END)
                 if (carsInS <= 0):
@@ -321,9 +343,9 @@ def cycleNS():
                     carsInS -= (rightLaneCars + straightLaneCars)
                     carsOutN += straightLaneCars
                     carsOutE += rightLaneCars
-                    tCarsInS.insert("1.0", round(carsInS))
-                    tCarsOutN.insert("1.0", round(carsOutN))
-                    tCarsOutE.insert("1.0", round(carsOutE))
+                    tCarsInS.insert("1.0", math.floor(carsInS))
+                    tCarsOutN.insert("1.0", math.floor(carsOutN))
+                    tCarsOutE.insert("1.0", math.floor(carsOutE))
 
                 currSecond += 1
             currTime = time.time() - startTime
@@ -348,6 +370,8 @@ def cycleNSGrnArr():
 
         if (currTime < cycleLengths[currCycle]):
             if (currTime > currSecond):
+                inflowCars()
+
                 lCurrTime["text"] = currSecond + 1
 
                 currRate = calculateCurrRate(currTime)
@@ -361,8 +385,8 @@ def cycleNSGrnArr():
                     leftLaneCars = currRate * float(tLeftN.get("1.0", "end-1c"))
                     carsInN -= leftLaneCars
                     carsOutE += leftLaneCars
-                    tCarsInN.insert("1.0", round(carsInN))
-                    tCarsOutE.insert("1.0", round(carsOutE))
+                    tCarsInN.insert("1.0", math.floor(carsInN))
+                    tCarsOutE.insert("1.0", math.floor(carsOutE))
 
                 tCarsInS.delete("1.0", tk.END)
                 if (carsInS <= 0):
@@ -373,8 +397,8 @@ def cycleNSGrnArr():
                     leftLaneCars = currRate * float(tLeftS.get("1.0", "end-1c"))
                     carsInS -= leftLaneCars
                     carsOutW += leftLaneCars
-                    tCarsInS.insert("1.0", round(carsInS))
-                    tCarsOutW.insert("1.0", round(carsOutW))
+                    tCarsInS.insert("1.0", math.floor(carsInS))
+                    tCarsOutW.insert("1.0", math.floor(carsOutW))
 
                 currSecond += 1
             currTime = time.time() - startTime
@@ -401,6 +425,8 @@ def cycleWE():
 
         if (currTime < cycleLengths[currCycle]):
             if (currTime > currSecond):
+                inflowCars()
+
                 lCurrTime["text"] = currSecond + 1
 
                 currRate = calculateCurrRate(currTime)
@@ -417,9 +443,9 @@ def cycleWE():
                     carsInW -= (rightLaneCars + straightLaneCars)
                     carsOutE += straightLaneCars
                     carsOutS += rightLaneCars
-                    tCarsInW.insert("1.0", round(carsInW))
-                    tCarsOutE.insert("1.0", round(carsOutE))
-                    tCarsOutS.insert("1.0", round(carsOutS))
+                    tCarsInW.insert("1.0", math.floor(carsInW))
+                    tCarsOutE.insert("1.0", math.floor(carsOutE))
+                    tCarsOutS.insert("1.0", math.floor(carsOutS))
 
                 tCarsInE.delete("1.0", tk.END)
                 if (carsInE <= 0):
@@ -433,9 +459,9 @@ def cycleWE():
                     carsInE -= (rightLaneCars + straightLaneCars)
                     carsOutW += straightLaneCars
                     carsOutN += rightLaneCars
-                    tCarsInE.insert("1.0", round(carsInE))
-                    tCarsOutW.insert("1.0", round(carsOutW))
-                    tCarsOutN.insert("1.0", round(carsOutN))
+                    tCarsInE.insert("1.0", math.floor(carsInE))
+                    tCarsOutW.insert("1.0", math.floor(carsOutW))
+                    tCarsOutN.insert("1.0", math.floor(carsOutN))
 
                 currSecond += 1
             currTime = time.time() - startTime
@@ -460,6 +486,8 @@ def cycleWEGrnArr():
 
         if (currTime < cycleLengths[currCycle]):
             if (currTime > currSecond):
+                inflowCars()
+
                 lCurrTime["text"] = currSecond + 1
 
                 currRate = calculateCurrRate(currTime)
@@ -473,8 +501,8 @@ def cycleWEGrnArr():
                     leftLaneCars = currRate * float(tLeftW.get("1.0", "end-1c"))
                     carsInW -= leftLaneCars
                     carsOutN += leftLaneCars
-                    tCarsInW.insert("1.0", round(carsInW))
-                    tCarsOutN.insert("1.0", round(carsOutN))
+                    tCarsInW.insert("1.0", math.floor(carsInW))
+                    tCarsOutN.insert("1.0", math.floor(carsOutN))
 
                 tCarsInE.delete("1.0", tk.END)
                 if (carsInE <= 0):
@@ -485,8 +513,8 @@ def cycleWEGrnArr():
                     leftLaneCars = currRate * float(tLeftE.get("1.0", "end-1c"))
                     carsInE -= leftLaneCars
                     carsOutS += leftLaneCars
-                    tCarsInE.insert("1.0", round(carsInE))
-                    tCarsOutS.insert("1.0", round(carsOutS))
+                    tCarsInE.insert("1.0", math.floor(carsInE))
+                    tCarsOutS.insert("1.0", math.floor(carsOutS))
 
                 currSecond += 1
             currTime = time.time() - startTime
@@ -494,6 +522,24 @@ def cycleWEGrnArr():
         else:
             currCycle += 1
             root.after(0, startSim)
+
+def inflowCars():
+    global carsInW, carsInN, carsInE, carsInS
+
+    carsInW += float(tInflowW.get("1.0", "end-1c"))
+    carsInN += float(tInflowN.get("1.0", "end-1c"))
+    carsInE += float(tInflowE.get("1.0", "end-1c"))
+    carsInS += float(tInflowS.get("1.0", "end-1c"))
+
+    tCarsInW.delete("1.0", tk.END)
+    tCarsInN.delete("1.0", tk.END)
+    tCarsInE.delete("1.0", tk.END)
+    tCarsInS.delete("1.0", tk.END)
+
+    tCarsInW.insert("1.0", math.floor(carsInW))
+    tCarsInN.insert("1.0", math.floor(carsInN))
+    tCarsInE.insert("1.0", math.floor(carsInE))
+    tCarsInS.insert("1.0", math.floor(carsInS))
 
 # Stops the simulation if running
 def stopSim(event=None):
