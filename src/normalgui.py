@@ -12,10 +12,11 @@ root = tkinter.Tk()
 
 #-------------------------------------------------------------------------------
 # GLOBALS:
-flowRateScalar = 1;     # used to change flow rate for specific scenarios
-maxFlowRate = 1;        # used to scale max flow rate (default flow rate = 2)
-sampleDelay = 500;      # delay between samples
-simActive = False;      # boolean for checking if simulation is active
+flowRateScalar = 1      # used to change max flow rate for specific scenarios
+flowDelayScalar = 1     # used to decrease or decrease time to max flow rate
+maxFlowRate = 1         # used to scale max flow rate (default flow rate = 2)
+sampleDelay = 500       # delay between samples
+simActive = False       # boolean for checking if simulation is active
 
 #-------------------------------------------------------------------------------
 # GUI SETUP:
@@ -60,18 +61,38 @@ root.configure(background="#D9D9D9")
 
 main_bg = tk.PhotoImage(file="../resources/intersection.png")
 
+# Intersection Canvas
+intersection = tk.Canvas(top, width=341, height=371)
+intersection.place(relx=0.13, rely=0.3, height=341, width=371)
+intersection.create_image(2, -11, image=main_bg, anchor="nw")
+
+# Red lights, green lights
+greenLight = tk.PhotoImage(file="../resources/green_light.png")
+redLight = tk.PhotoImage(file="../resources/red_light.png")
+
+# Lights from West entrance
+greenLightW = intersection.create_image(109, 167, image=greenLight, anchor="nw", state="hidden")
+redLightW = intersection.create_image(127, 167, image=redLight, anchor="nw", state="hidden")
+
+# Lights from North entrance
+greenLightN = intersection.create_image(180, 95, image=greenLight, anchor="nw", state="hidden")
+redLightN = intersection.create_image(180, 113, image=redLight, anchor="nw", state="hidden")
+
+# Lights from East entrance
+greenLightE = intersection.create_image(252, 167, image=greenLight, anchor="nw", state="hidden")
+redLightE = intersection.create_image(234, 167, image=redLight, anchor="nw", state="hidden")
+
+# Lights from South entrance
+greenLightS = intersection.create_image(180, 238, image=greenLight, anchor="nw", state="hidden")
+redLightS = intersection.create_image(180, 221, image=redLight, anchor="nw", state="hidden")
+
 
 # ---Frames---
 # Timing value input frame
 fTiming = tk.Frame(top, bg="#707070", highlightbackground="#065535", highlightthickness=3)
 fTiming.place(relx=0.67, rely=0.2, relheight=0.215, relwidth=0.277)
 
-
 # ---Labels---
-# Intersection image
-lIntersection = tk.Label(top, image=main_bg)
-lIntersection.place(relx=0.13, rely=0.3, height=341, width=371)
-
 # Timing value input labels
 lTimeNS = tk.Label(fTiming, text="N-S", bg="#707070", anchor="nw")
 lTimeNSGrnArr = tk.Label(fTiming, text="N-S Green Arrow", bg="#707070", anchor="nw")
@@ -121,10 +142,10 @@ tTimeNSGrnArr = tk.Text(fTiming)
 tTimeWE = tk.Text(fTiming)
 tTimeWEGrnArr = tk.Text(fTiming)
 
-tTimeNS.insert('1.0', '15')
-tTimeNSGrnArr.insert('1.0', '15')
-tTimeWE.insert('1.0', '15')
-tTimeWEGrnArr.insert('1.0', '15')
+tTimeNS.insert('1.0', '20')
+tTimeNSGrnArr.insert('1.0', '10')
+tTimeWE.insert('1.0', '20')
+tTimeWEGrnArr.insert('1.0', '10')
 
 tCarsInW.place(relx=0.05, rely=0.59, relheight=0.035, relwidth=0.06)
 tCarsInN.place(relx=0.278, rely=0.25, relheight=0.035, relwidth=0.06)
@@ -140,10 +161,10 @@ tTimeNSGrnArr.place(relx=0.65, rely=0.275, height=20, width=45)
 tTimeWE.place(relx=0.65, rely=0.5, height=20, width=45)
 tTimeWEGrnArr.place(relx=0.65, rely=0.725, height=20, width=45)
 
-tCarsInW.insert('1.0', '15')
-tCarsInN.insert('1.0', '15')
-tCarsInE.insert('1.0', '15')
-tCarsInS.insert('1.0', '15')
+tCarsInW.insert('1.0', '30')
+tCarsInN.insert('1.0', '30')
+tCarsInE.insert('1.0', '30')
+tCarsInS.insert('1.0', '30')
 tCarsOutW.insert('1.0', '0')
 tCarsOutN.insert('1.0', '0')
 tCarsOutE.insert('1.0', '0')
@@ -166,37 +187,37 @@ tInflowE.insert('1.0', '0.2')
 tInflowS.insert('1.0', '0.2')
 
 # Lane percentages text field
-tRightW = tk.Text(lIntersection, bg="#90EEBF")
-tStraightW = tk.Text(lIntersection, bg="#90EEBF")
-tLeftW = tk.Text(lIntersection, bg="#90EEBF")
+tRightW = tk.Text(intersection, bg="#90EEBF")
+tStraightW = tk.Text(intersection, bg="#90EEBF")
+tLeftW = tk.Text(intersection, bg="#90EEBF")
 
-tRightN = tk.Text(lIntersection, bg="#90EEBF")
-tStraightN = tk.Text(lIntersection, bg="#90EEBF")
-tLeftN = tk.Text(lIntersection, bg="#90EEBF")
+tRightN = tk.Text(intersection, bg="#90EEBF")
+tStraightN = tk.Text(intersection, bg="#90EEBF")
+tLeftN = tk.Text(intersection, bg="#90EEBF")
 
-tRightE = tk.Text(lIntersection, bg="#90EEBF")
-tStraightE = tk.Text(lIntersection, bg="#90EEBF")
-tLeftE = tk.Text(lIntersection, bg="#90EEBF")
+tRightE = tk.Text(intersection, bg="#90EEBF")
+tStraightE = tk.Text(intersection, bg="#90EEBF")
+tLeftE = tk.Text(intersection, bg="#90EEBF")
 
-tRightS = tk.Text(lIntersection, bg="#90EEBF")
-tStraightS = tk.Text(lIntersection, bg="#90EEBF")
-tLeftS = tk.Text(lIntersection, bg="#90EEBF")
+tRightS = tk.Text(intersection, bg="#90EEBF")
+tStraightS = tk.Text(intersection, bg="#90EEBF")
+tLeftS = tk.Text(intersection, bg="#90EEBF")
 
-tRightW.place(relx=0.06, rely=0.663, height=20, width=20)
-tStraightW.place(relx=0.06, rely=0.589, height=20, width=20)
-tLeftW.place(relx=0.06, rely=0.513, height=20, width=20)
+tRightW.place(relx=0.06, rely=0.657, height=20, width=20)
+tStraightW.place(relx=0.06, rely=0.584, height=20, width=20)
+tLeftW.place(relx=0.06, rely=0.511, height=20, width=20)
 
 tRightN.place(relx=0.305, rely=0.04, height=20, width=20)
-tStraightN.place(relx=0.374, rely=0.04, height=20, width=20)
-tLeftN.place(relx=0.442, rely=0.04, height=20, width=20)
+tStraightN.place(relx=0.372, rely=0.04, height=20, width=20)
+tLeftN.place(relx=0.44, rely=0.04, height=20, width=20)
 
 tRightE.place(relx=0.89, rely=0.29, height=20, width=20)
-tStraightE.place(relx=0.89, rely=0.366, height=20, width=20)
+tStraightE.place(relx=0.89, rely=0.364, height=20, width=20)
 tLeftE.place(relx=0.89, rely=0.438, height=20, width=20)
 
-tRightS.place(relx=0.645, rely=0.915, height=20, width=20)
-tStraightS.place(relx=0.577, rely=0.915, height=20, width=20)
-tLeftS.place(relx=0.51, rely=0.915, height=20, width=20)
+tRightS.place(relx=0.641, rely=0.915, height=20, width=20)
+tStraightS.place(relx=0.575, rely=0.915, height=20, width=20)
+tLeftS.place(relx=0.508, rely=0.915, height=20, width=20)
 
 tRightW.insert('1.0', '.2')
 tStraightW.insert('1.0', '.7')
@@ -262,6 +283,8 @@ carsOutS = 0
 # Starts simulation when user clicks 'Run Simulation' button
 def startSim(event=None):
     global currTime, startTime, currSecond, currCycle, simActive
+    global greenLightW, greenLightN, greentLightE, greenLightS
+    global redLightW, redLightN, redLightE, redLightS
 
     cycleLengths[0] = int(tTimeNS.get("1.0", "end-1c"));
     cycleLengths[1] = int(tTimeNSGrnArr.get("1.0", "end-1c"));
@@ -276,12 +299,48 @@ def startSim(event=None):
     currTime = time.time() - startTime
     currSecond = 0
     if (currCycle == 0):
+        intersection.itemconfig(greenLightW, state="hidden")
+        intersection.itemconfig(redLightW, state="normal")
+        intersection.itemconfig(greenLightN, state="normal")
+        intersection.itemconfig(redLightN, state="hidden")
+        intersection.itemconfig(greenLightE, state="hidden")
+        intersection.itemconfig(redLightE, state="normal")
+        intersection.itemconfig(greenLightS, state="normal")
+        intersection.itemconfig(redLightS, state="hidden")
+
         root.after(0, cycleNS)
     elif (currCycle == 1):
+        intersection.itemconfig(greenLightW, state="hidden")
+        intersection.itemconfig(redLightW, state="normal")
+        intersection.itemconfig(greenLightN, state="normal")
+        intersection.itemconfig(redLightN, state="hidden")
+        intersection.itemconfig(greenLightE, state="hidden")
+        intersection.itemconfig(redLightE, state="normal")
+        intersection.itemconfig(greenLightS, state="normal")
+        intersection.itemconfig(redLightS, state="hidden")
+
         root.after(0, cycleNSGrnArr)
     elif (currCycle == 2):
+        intersection.itemconfig(greenLightW, state="normal")
+        intersection.itemconfig(redLightW, state="hidden")
+        intersection.itemconfig(greenLightN, state="hidden")
+        intersection.itemconfig(redLightN, state="normal")
+        intersection.itemconfig(greenLightE, state="normal")
+        intersection.itemconfig(redLightE, state="hidden")
+        intersection.itemconfig(greenLightS, state="hidden")
+        intersection.itemconfig(redLightS, state="normal")
+
         root.after(0, cycleWE)
     elif (currCycle == 3):
+        intersection.itemconfig(greenLightW, state="normal")
+        intersection.itemconfig(redLightW, state="hidden")
+        intersection.itemconfig(greenLightN, state="hidden")
+        intersection.itemconfig(redLightN, state="normal")
+        intersection.itemconfig(greenLightE, state="normal")
+        intersection.itemconfig(redLightE, state="hidden")
+        intersection.itemconfig(greenLightS, state="hidden")
+        intersection.itemconfig(redLightS, state="normal")
+
         root.after(0, cycleWEGrnArr)
     else:
         simActive = False
@@ -520,7 +579,7 @@ def cycleWEGrnArr():
             currTime = time.time() - startTime
             root.after(sampleDelay, cycleWEGrnArr)
         else:
-            currCycle += 1
+            currCycle = 0
             root.after(0, startSim)
 
 def inflowCars():
@@ -550,21 +609,27 @@ def stopSim(event=None):
 
 # Returns the traffic flow rate at a specific time since GREEN light activated
 def calculateCurrRate(t):
-    global maxFlowRate
+    global maxFlowRate, flowRateScalar, flowDelayScalar
     maxFlowRate = float(tMaxFlowRate.get("1.0", "end-1c")) / 2
-    return (maxFlowRate * (math.tanh(t-3) + 1))
+    return (flowRateScalar * (maxFlowRate * (math.tanh((flowDelayScalar * t) - 3) + 1)))
 
 # Updates flow rate scalar based on scenario selection
 def scenarioChange(*args):
+    global flowRateScalar, flowDelayScalar
+
     # change based on selected scenario
     if (currScenario.get() == "None"):
-        flowRateScalar = 1 #UPDATE
+        flowRateScalar = 1
+        flowDelayScalar = 1
     elif (currScenario.get() == "Construction"):
-        flowRateScalar = 1 #UPDATE
+        flowRateScalar = 0.7
+        flowDelayScalar = 1
     elif (currScenario.get() == "Weather"):
-        flowRateScalar = 1 #UPDATE
+        flowRateScalar = 0.85
+        flowDelayScalar = 0.75
     elif (currScenario.get() == "Accident"):
-        flowRateScalar = 1 #UPDATE
+        flowRateScalar = 0.4
+        flowDelayScalar = 0.5
 
 # CALLBACK BINDINGS
 bRunSim.bind("<Button-1>", startSim)
