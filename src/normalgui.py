@@ -259,7 +259,11 @@ carsOutN = 0
 carsOutE = 0
 carsOutS = 0
 
-# Starts simulation when user clicks 'Run Simulation' button
+"""
+description- Starts simulation when user clicks 'Run Simulation' button
+parameters-
+return-
+"""
 def startSim(event=None):
     global currTime, startTime, currSecond, currCycle, simActive
 
@@ -290,7 +294,11 @@ def startSim(event=None):
         lCurrCycle["text"] = "-"
         lCurrTime["text"] = 0
         currCycle = 0
-
+"""
+description-
+parameters-
+return-
+"""
 def cycleNS():
     global currTime, startTime, currSecond, currCycle, cycleLengths, simActive
     global carsInN, carsInS, carsOutS, carsOutW, carsOutN, carsOutE
@@ -353,7 +361,11 @@ def cycleNS():
         else:
             currCycle += 1
             root.after(0, startSim)
-
+"""
+description-
+parameters-
+return-
+"""
 def cycleNSGrnArr():
     global currTime, startTime, currSecond, currCycle, cycleLengths, simActive
     global carsInN, carsInS, carsOutE, carsOutW
@@ -406,7 +418,11 @@ def cycleNSGrnArr():
         else:
             currCycle += 1
             root.after(0, startSim)
-
+"""
+description-
+parameters-
+return-
+"""
 def cycleWE():
     global currTime, startTime, currSecond, currCycle, cycleLengths, simActive
     global carsInW, carsInE, carsOutE, carsOutS, carsOutW, carsOutN
@@ -469,7 +485,11 @@ def cycleWE():
         else:
             currCycle += 1
             root.after(0, startSim)
-
+"""
+description-
+parameters-
+return-
+"""
 def cycleWEGrnArr():
     global currTime, startTime, currSecond, currCycle, cycleLengths, simActive
     global carsInW, carsInE, carsOutN, carsOutS
@@ -522,7 +542,11 @@ def cycleWEGrnArr():
         else:
             currCycle += 1
             root.after(0, startSim)
-
+"""
+description-
+parameters-
+return-
+"""
 def inflowCars():
     global carsInW, carsInN, carsInE, carsInS
 
@@ -541,20 +565,33 @@ def inflowCars():
     tCarsInE.insert("1.0", math.floor(carsInE))
     tCarsInS.insert("1.0", math.floor(carsInS))
 
-# Stops the simulation if running
+
+"""
+description- Stops the simulation if running
+parameters-
+return-
+"""
 def stopSim(event=None):
     global simActive
     simActive = False
     bRunSim["state"] = "normal"
     bStopSim["state"] = "disabled"
 
-# Returns the traffic flow rate at a specific time since GREEN light activated
+"""
+description- Returns the traffic flow rate at a specific time since GREEN light activated
+parameters-
+return-
+"""
 def calculateCurrRate(t):
     global maxFlowRate
     maxFlowRate = float(tMaxFlowRate.get("1.0", "end-1c")) / 2
     return (maxFlowRate * (math.tanh(t-3) + 1))
 
-# Updates flow rate scalar based on scenario selection
+"""
+description- Updates flow rate scalar based on scenario selection
+parameters-
+return-
+"""
 def scenarioChange(*args):
     # change based on selected scenario
     if (currScenario.get() == "None"):
