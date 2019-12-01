@@ -45,6 +45,8 @@ top.pack();
 top.create_text((20, 10), text="Traffic Simulator", font="MSGothic 20 bold", fill="#065535", anchor="nw")
 top.create_text((570, 98), text="Cycle Timing", font="MSGothic 15 bold", fill="#065535", anchor="nw")
 top.create_text((660, 347), text="Scenarios", font="MSGothic 15 bold", fill="#065535", anchor="nw")
+top.create_text((660, 400), text="Days", font="MSGothic 15 bold", fill="#065535", anchor="nw")
+top.create_text((660, 450), text="Time of Day", font="MSGothic 15 bold", fill="#065535", anchor="nw")
 top.create_text((660, 280), text="Max Outflow Rate", font="MSGothic 10 bold", fill="#065535", anchor="nw")
 top.create_text((703, 303), text="cars/sec", font="MSGothic 8", fill="#065535", anchor="nw")
 top.create_text((340, 54), text="Cycle", font="MSGothic 8 bold", fill="#065535", anchor="nw")
@@ -262,9 +264,21 @@ tMaxFlowRate.insert('1.0', '2.0')
 currScenario = tk.StringVar(top)
 currScenario.set("None") # set default scenario to 'None'
 
+currDay = tk.StringVar(top)
+currDay.set("Monday")
+
+currDayTime = tk.StringVar(top)
+currDayTime.set("Morning")
+
 # Drop down menu
 scenarios = tk.OptionMenu(top, currScenario, "None", "Construction", "Weather", "Accident")
 scenarios.place(relx=0.775, rely=0.6, height=25, width=125)
+
+days = tk.OptionMenu(top, currDay, "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
+days.place(relx=0.775, rely=0.68, height=25, width=125)
+
+dayTime = tk.OptionMenu(top, currDayTime, "Morning", "Afternoon", "Evening", "Night")
+dayTime.place(relx=0.775, rely=0.76, height=25, width=125)
 
 # ---Buttons---
 # 'Run Simulation' button
@@ -699,8 +713,8 @@ def scenarioChange(*args):
         flowRateScalar = 1
         flowDelayScalar = 1
     elif (currScenario.get() == "Construction"):
-        flowRateScalar = 0.7
-        flowDelayScalar = 1
+        flowRateScalar = 0.5
+        flowDelayScalar = 0.5
     elif (currScenario.get() == "Weather"):
         flowRateScalar = 0.85
         flowDelayScalar = 0.75
@@ -708,12 +722,38 @@ def scenarioChange(*args):
         flowRateScalar = 0.4
         flowDelayScalar = 0.5
 
+def dayChange(*args):
+    global flowRateScalar, flowDelayScalar
+
+    if(currDay.get() == "Monday" or currDay.get() == "Wednesday" or currDay.get() == "Friday"):
+        flowRateScalar = 1
+        flowDelayScalar = 1
+    elif (currDay.get() == "Tuesday" or currDay.get() == "Thursday"):
+        flowRateScalar = 0.6
+        flowDelayScalar = 0.6
+    elif(currDay.get() == "Saturday" or currDay.get() == "Sunday"):
+        flowRateScalar = 1.2
+        flowDelayScalar = 1
+def timeChange(*args):
+    global flowRateScalar, flowDelayScalar
+
+    if(currDayTime.get() == "Morning" or currDayTime.get() == "Evening"):
+        flowRateScalar = 0.5
+        flowDelayScalar = 0.4
+    elif(currDayTime.get() == "Afternoon"):
+        flowRateScalar = 1
+        flowDelayScalar = 1
+    elif(currDayTime.get() == "Night"):
+        flowRateScalar = 1.5
+        flowDelayScalar = 1
+
 # CALLBACK BINDINGS
 bRunSim.bind("<Button-1>", startSim)
 bStopSim.bind("<Button-1>", stopSim)
 
 currScenario.trace('w', scenarioChange)
-
+currDay.trace('w', dayChange)
+currDayTime.trace('w', timeChange)
 #-------------------------------------------------------------------------------
 
 # start main loop
