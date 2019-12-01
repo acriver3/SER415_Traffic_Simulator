@@ -271,7 +271,7 @@ currDayTime = tk.StringVar(top)
 currDayTime.set("Morning")
 
 # Drop down menu
-scenarios = tk.OptionMenu(top, currScenario, "None", "Construction", "Weather", "Accident")
+scenarios = tk.OptionMenu(top, currScenario, "None", "Construction", "Rainy Weather", "Accident")
 scenarios.place(relx=0.775, rely=0.6, height=25, width=125)
 
 days = tk.OptionMenu(top, currDay, "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
@@ -400,6 +400,7 @@ def cycleNS():
                 lCurrTime["text"] = currSecond + 1
 
                 currRate = calculateCurrRate(currTime)
+                print(currRate)
 
                 tCarsInN.delete("1.0", tk.END)
                 if (carsInN >= 0):
@@ -698,10 +699,22 @@ return-
 def calculateCurrRate(t):
     global maxFlowRate, flowRateScalar, flowDelayScalar
     maxFlowRate = float(tMaxFlowRate.get("1.0", "end-1c")) / 2
-    return (flowRateScalar * (maxFlowRate * (math.tanh((flowDelayScalar * t) - 3) + 1)))
+    offsetY = maxFlowRate * flowRateScalar
+
+    # calculate flow rate
+    flowRate = (flowRateScalar * (maxFlowRate * (math.tanh((flowDelayScalar * t) - math.pi) + offsetY)))
+
+    # In rare cases where flow rate drops below zero, make flow rate zero
+    # (this may occur due to increased precision and the fact that floats
+    # only store 32 bits. Thus, the negative value is very small but would cause
+    # program to drop one car since the number of cars is rounded down, or floored)
+    if (flowRate <= 0):
+        flowRate = 0
+
+    return flowRate
 
 """
-description- Updates flow rate scalar based on scenario selection
+description- Updates flow rate/flow delay scalars based on scenario selection
 parameters-
 return-
 """
@@ -715,7 +728,7 @@ def scenarioChange(*args):
     elif (currScenario.get() == "Construction"):
         flowRateScalar = 0.5
         flowDelayScalar = 0.5
-    elif (currScenario.get() == "Weather"):
+    elif (currScenario.get() == "Rainy Weather"):
         flowRateScalar = 0.85
         flowDelayScalar = 0.75
     elif (currScenario.get() == "Accident"):
@@ -734,6 +747,7 @@ def dayChange(*args):
     elif(currDay.get() == "Saturday" or currDay.get() == "Sunday"):
         flowRateScalar = 1.2
         flowDelayScalar = 1
+
 def timeChange(*args):
     global flowRateScalar, flowDelayScalar
 
