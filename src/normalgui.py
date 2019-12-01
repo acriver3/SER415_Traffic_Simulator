@@ -10,13 +10,31 @@ import time
 
 root = tkinter.Tk()
 
+
 #-------------------------------------------------------------------------------
 # GLOBALS:
-flowRateScalar = 1      # used to change max flow rate for specific scenarios
-flowDelayScalar = 1     # used to decrease or decrease time to max flow rate
-maxFlowRate = 1         # used to scale max flow rate (default flow rate = 2)
+flowRateScalar = 1      # scalar to change max flow rate for specific scenarios
+flowDelayScalar = 1     # scalar to decrease or decrease time to max flow rate
+maxFlowRate = 1         # scalar to scale max flow rate (default flow rate = 2)
 sampleDelay = 500       # delay between samples
 simActive = False       # boolean for checking if simulation is active
+
+cycleLengths = [0, 0, 0, 0] # cycle lengths (in s)
+
+startTime = 0           # start time of one traffic cycle
+currTime = 0            # currenct time during traffic cycle
+currSecond = 0          # current second during traffic cycle
+currCycle = 0           # current traffic cycle
+
+carsInW = 0             # cars waiting from West direction
+carsInN = 0             # cars waiting from North direction
+carsInE = 0             # cars waiting from East direction
+carsInS = 0             # cars waiting from South direction
+carsOutW = 0            # cars waiting from West direction
+carsOutN = 0            # cars waiting from North direction
+carsOutE = 0            # cars waiting from East direction
+carsOutS = 0            # cars waiting from South direction
+
 
 #-------------------------------------------------------------------------------
 # GUI SETUP:
@@ -256,29 +274,9 @@ bRunSim.place(relx=0.054, rely=0.11, height=34, width=97)
 bStopSim = tk.Button(top, text="Stop", bg = "#FFCCCB", state="disabled")
 bStopSim.place(relx=0.18, rely=0.11, height=34, width=40)
 
-# ---Boolean Indicators---
-#rbSimRunning = tk.Radiobutton(top, text ="")
-#rbSimRunning.place(relx=0.2, rely=0.11, height=25, width=25)
-#rbSimRunning.deselect()
 
 #-------------------------------------------------------------------------------
 # FUNCTIONS
-
-cycleLengths = [0, 0, 0, 0] # cycle lengths (in s)
-
-startTime = 0
-currTime = 0
-currSecond = 0
-currCycle = 0
-
-carsInW = 0
-carsInN = 0
-carsInE = 0
-carsInS = 0
-carsOutW = 0
-carsOutN = 0
-carsOutE = 0
-carsOutS = 0
 
 """
 description- Starts simulation when user clicks 'Run Simulation' button
@@ -289,6 +287,7 @@ def startSim(event=None):
     global currTime, startTime, currSecond, currCycle, simActive
     global greenLightW, greenLightN, greentLightE, greenLightS
     global redLightW, redLightN, redLightE, redLightS
+    global carsInW, carsInN, carsInE, carsInS
 
     cycleLengths[0] = int(tTimeNS.get("1.0", "end-1c"));
     cycleLengths[1] = int(tTimeNSGrnArr.get("1.0", "end-1c"));
@@ -302,6 +301,12 @@ def startSim(event=None):
     startTime = time.time()
     currTime = time.time() - startTime
     currSecond = 0
+
+    carsInW = float(tCarsInW.get("1.0", "end-1c"))
+    carsInN = float(tCarsInN.get("1.0", "end-1c"))
+    carsInE = float(tCarsInE.get("1.0", "end-1c"))
+    carsInS = float(tCarsInS.get("1.0", "end-1c"))
+
     if (currCycle == 0):
         intersection.itemconfig(greenLightW, state="hidden")
         intersection.itemconfig(redLightW, state="normal")
@@ -383,14 +388,19 @@ def cycleNS():
                 currRate = calculateCurrRate(currTime)
 
                 tCarsInN.delete("1.0", tk.END)
-                if (carsInN <= 0):
-                    tCarsInN.insert("1.0", 0)
-                else:
+                if (carsInN >= 0):
                     tCarsOutS.delete("1.0", tk.END)
                     tCarsOutW.delete("1.0", tk.END)
 
                     rightLaneCars = currRate * float(tRightN.get("1.0", "end-1c"))
                     straightLaneCars = currRate * float(tStraightN.get("1.0", "end-1c"))
+
+                    if ((carsInN - (rightLaneCars + straightLaneCars)) <= 0):
+                        # scale down right lane cars to match with actual cars waiting
+                        rightLaneCars = round(carsInN * (rightLaneCars / (rightLaneCars + straightLaneCars)), 2)
+                        # scale down straight lane cars
+                        straightLaneCars = carsInN - rightLaneCars
+
                     carsInN -= (rightLaneCars + straightLaneCars)
                     carsOutS += straightLaneCars
                     carsOutW += rightLaneCars
@@ -399,14 +409,19 @@ def cycleNS():
                     tCarsOutW.insert("1.0", math.floor(carsOutW))
 
                 tCarsInS.delete("1.0", tk.END)
-                if (carsInS <= 0):
-                    tCarsInS.insert("1.0", 0)
-                else:
+                if (carsInS >= 0):
                     tCarsOutN.delete("1.0", tk.END)
                     tCarsOutE.delete("1.0", tk.END)
 
                     rightLaneCars = currRate * float(tRightS.get("1.0", "end-1c"))
                     straightLaneCars = currRate * float(tStraightS.get("1.0", "end-1c"))
+
+                    if ((carsInS - (rightLaneCars + straightLaneCars)) <= 0):
+                        # scale down right lane cars to match with actual cars waiting
+                        rightLaneCars = round(carsInS * (rightLaneCars / (rightLaneCars + straightLaneCars)), 2)
+                        # scale down straight lane cars
+                        straightLaneCars = carsInS - rightLaneCars
+
                     carsInS -= (rightLaneCars + straightLaneCars)
                     carsOutN += straightLaneCars
                     carsOutE += rightLaneCars
@@ -420,6 +435,7 @@ def cycleNS():
         else:
             currCycle += 1
             root.after(0, startSim)
+
 """
 description-
 parameters-
@@ -448,24 +464,30 @@ def cycleNSGrnArr():
                 currRate = calculateCurrRate(currTime)
 
                 tCarsInN.delete("1.0", tk.END)
-                if (carsInN <= 0):
-                    tCarsInN.insert("1.0", 0)
-                else:
+                if (carsInN >= 0):
                     tCarsOutE.delete("1.0", tk.END)
 
                     leftLaneCars = currRate * float(tLeftN.get("1.0", "end-1c"))
+
+                    if ((carsInN - leftLaneCars) <= 0):
+                        # scale down left lane cars to match with actual cars waiting
+                        leftLaneCars = carsInN
+
                     carsInN -= leftLaneCars
                     carsOutE += leftLaneCars
                     tCarsInN.insert("1.0", math.floor(carsInN))
                     tCarsOutE.insert("1.0", math.floor(carsOutE))
 
                 tCarsInS.delete("1.0", tk.END)
-                if (carsInS <= 0):
-                    tCarsInS.insert("1.0", 0)
-                else:
+                if (carsInS >= 0):
                     tCarsOutW.delete("1.0", tk.END)
 
                     leftLaneCars = currRate * float(tLeftS.get("1.0", "end-1c"))
+
+                    if ((carsInS - leftLaneCars) <= 0):
+                        # scale down left lane cars to match with actual cars waiting
+                        leftLaneCars = carsInS
+
                     carsInS -= leftLaneCars
                     carsOutW += leftLaneCars
                     tCarsInS.insert("1.0", math.floor(carsInS))
@@ -477,6 +499,7 @@ def cycleNSGrnArr():
         else:
             currCycle += 1
             root.after(0, startSim)
+
 """
 description-
 parameters-
@@ -507,14 +530,19 @@ def cycleWE():
                 currRate = calculateCurrRate(currTime)
 
                 tCarsInW.delete("1.0", tk.END)
-                if (carsInW <= 0):
-                    tCarsInW.insert("1.0", 0)
-                else:
+                if (carsInW >= 0):
                     tCarsOutE.delete("1.0", tk.END)
                     tCarsOutS.delete("1.0", tk.END)
 
                     rightLaneCars = currRate * float(tRightW.get("1.0", "end-1c"))
                     straightLaneCars = currRate * float(tStraightW.get("1.0", "end-1c"))
+
+                    if ((carsInW - (rightLaneCars + straightLaneCars)) <= 0):
+                        # scale down right lane cars to match with actual cars waiting
+                        rightLaneCars = round(carsInW * (rightLaneCars / (rightLaneCars + straightLaneCars)), 2)
+                        # scale down straight lane cars
+                        straightLaneCars = carsInW - rightLaneCars
+
                     carsInW -= (rightLaneCars + straightLaneCars)
                     carsOutE += straightLaneCars
                     carsOutS += rightLaneCars
@@ -523,14 +551,19 @@ def cycleWE():
                     tCarsOutS.insert("1.0", math.floor(carsOutS))
 
                 tCarsInE.delete("1.0", tk.END)
-                if (carsInE <= 0):
-                    tCarsInE.insert("1.0", 0)
-                else:
+                if (carsInE >= 0):
                     tCarsOutW.delete("1.0", tk.END)
                     tCarsOutN.delete("1.0", tk.END)
 
                     rightLaneCars = currRate * float(tRightE.get("1.0", "end-1c"))
                     straightLaneCars = currRate * float(tStraightE.get("1.0", "end-1c"))
+
+                    if ((carsInE - (rightLaneCars + straightLaneCars)) <= 0):
+                        # scale down right lane cars to match with actual cars waiting
+                        rightLaneCars = round(carsInE * (rightLaneCars / (rightLaneCars + straightLaneCars)), 2)
+                        # scale down straight lane cars
+                        straightLaneCars = carsInE - rightLaneCars
+
                     carsInE -= (rightLaneCars + straightLaneCars)
                     carsOutW += straightLaneCars
                     carsOutN += rightLaneCars
@@ -544,6 +577,7 @@ def cycleWE():
         else:
             currCycle += 1
             root.after(0, startSim)
+
 """
 description-
 parameters-
@@ -572,24 +606,30 @@ def cycleWEGrnArr():
                 currRate = calculateCurrRate(currTime)
 
                 tCarsInW.delete("1.0", tk.END)
-                if (carsInW <= 0):
-                    tCarsInW.insert("1.0", 0)
-                else:
+                if (carsInW >= 0):
                     tCarsOutN.delete("1.0", tk.END)
 
                     leftLaneCars = currRate * float(tLeftW.get("1.0", "end-1c"))
+
+                    if ((carsInW - leftLaneCars) <= 0):
+                        # scale down left lane cars to match with actual cars waiting
+                        leftLaneCars = carsInW
+
                     carsInW -= leftLaneCars
                     carsOutN += leftLaneCars
                     tCarsInW.insert("1.0", math.floor(carsInW))
                     tCarsOutN.insert("1.0", math.floor(carsOutN))
 
                 tCarsInE.delete("1.0", tk.END)
-                if (carsInE <= 0):
-                    tCarsInE.insert("1.0", 0)
-                else:
+                if (carsInE >= 0):
                     tCarsOutS.delete("1.0", tk.END)
 
                     leftLaneCars = currRate * float(tLeftE.get("1.0", "end-1c"))
+
+                    if ((carsInE - leftLaneCars) <= 0):
+                        # scale down left lane cars to match with actual cars waiting
+                        leftLaneCars = carsInE
+
                     carsInE -= leftLaneCars
                     carsOutS += leftLaneCars
                     tCarsInE.insert("1.0", math.floor(carsInE))
@@ -601,6 +641,7 @@ def cycleWEGrnArr():
         else:
             currCycle = 0
             root.after(0, startSim)
+
 """
 description-
 parameters-
@@ -623,7 +664,6 @@ def inflowCars():
     tCarsInN.insert("1.0", math.floor(carsInN))
     tCarsInE.insert("1.0", math.floor(carsInE))
     tCarsInS.insert("1.0", math.floor(carsInS))
-
 
 """
 description- Stops the simulation if running
@@ -675,6 +715,6 @@ bStopSim.bind("<Button-1>", stopSim)
 currScenario.trace('w', scenarioChange)
 
 #-------------------------------------------------------------------------------
-# HELPER FUNCTIONS
 
+# start main loop
 root.mainloop()
