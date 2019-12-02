@@ -302,7 +302,9 @@ def startSim(event=None):
     global greenLightW, greenLightN, greentLightE, greenLightS
     global redLightW, redLightN, redLightE, redLightS
     global carsInW, carsInN, carsInE, carsInS
-
+	
+    disableEdits()
+	
     cycleLengths[0] = int(tTimeNS.get("1.0", "end-1c"));
     cycleLengths[1] = int(tTimeNSGrnArr.get("1.0", "end-1c"));
     cycleLengths[2] = int(tTimeWE.get("1.0", "end-1c"));
@@ -401,7 +403,11 @@ def cycleNS():
 
                 currRate = calculateCurrRate(currTime)
                 print(currRate)
-
+				
+                tCarsInN.configure(state = 'normal')
+                tCarsOutS.configure(state = 'normal')
+                tCarsOutW.configure(state = 'normal')
+				
                 tCarsInN.delete("1.0", tk.END)
                 if (carsInN >= 0):
                     tCarsOutS.delete("1.0", tk.END)
@@ -419,10 +425,21 @@ def cycleNS():
                     carsInN -= (rightLaneCars + straightLaneCars)
                     carsOutS += straightLaneCars
                     carsOutW += rightLaneCars
+					
+
+					
                     tCarsInN.insert("1.0", math.floor(carsInN))
                     tCarsOutS.insert("1.0", math.floor(carsOutS))
                     tCarsOutW.insert("1.0", math.floor(carsOutW))
-
+					
+                    tCarsInN.configure(state = 'disabled')
+                    tCarsOutS.configure(state = 'disabled')
+                    tCarsOutW.configure(state = 'disabled')
+					
+                tCarsInS.configure(state = 'normal')
+                tCarsOutN.configure(state = 'normal')
+                tCarsOutE.configure(state = 'normal')
+				
                 tCarsInS.delete("1.0", tk.END)
                 if (carsInS >= 0):
                     tCarsOutN.delete("1.0", tk.END)
@@ -440,9 +457,14 @@ def cycleNS():
                     carsInS -= (rightLaneCars + straightLaneCars)
                     carsOutN += straightLaneCars
                     carsOutE += rightLaneCars
+					
                     tCarsInS.insert("1.0", math.floor(carsInS))
                     tCarsOutN.insert("1.0", math.floor(carsOutN))
                     tCarsOutE.insert("1.0", math.floor(carsOutE))
+					
+                    tCarsInS.configure(state = 'disabled')
+                    tCarsOutN.configure(state = 'disabled')
+                    tCarsOutE.configure(state = 'disabled')
 
                 currSecond += 1
             currTime = time.time() - startTime
@@ -477,7 +499,10 @@ def cycleNSGrnArr():
                 lCurrTime["text"] = currSecond + 1
 
                 currRate = calculateCurrRate(currTime)
-
+				
+                tCarsInN.configure(state = 'normal')
+                tCarsOutE.configure(state = 'normal')
+				
                 tCarsInN.delete("1.0", tk.END)
                 if (carsInN >= 0):
                     tCarsOutE.delete("1.0", tk.END)
@@ -490,9 +515,16 @@ def cycleNSGrnArr():
 
                     carsInN -= leftLaneCars
                     carsOutE += leftLaneCars
+
                     tCarsInN.insert("1.0", math.floor(carsInN))
                     tCarsOutE.insert("1.0", math.floor(carsOutE))
 
+                    tCarsInN.configure(state = 'disabled')
+                    tCarsOutE.configure(state = 'disabled')
+					
+                tCarsInS.configure(state = 'normal')
+                tCarsOutW.configure(state = 'normal') 
+				
                 tCarsInS.delete("1.0", tk.END)
                 if (carsInS >= 0):
                     tCarsOutW.delete("1.0", tk.END)
@@ -505,8 +537,14 @@ def cycleNSGrnArr():
 
                     carsInS -= leftLaneCars
                     carsOutW += leftLaneCars
+					
+
+					
                     tCarsInS.insert("1.0", math.floor(carsInS))
                     tCarsOutW.insert("1.0", math.floor(carsOutW))
+					
+                    tCarsInS.configure(state = 'disabled')
+                    tCarsOutW.configure(state = 'disabled')					
 
                 currSecond += 1
             currTime = time.time() - startTime
@@ -543,7 +581,11 @@ def cycleWE():
                 lCurrTime["text"] = currSecond + 1
 
                 currRate = calculateCurrRate(currTime)
-
+				
+                tCarsInW.configure(state = 'normal')
+                tCarsOutE.configure(state = 'normal')
+                tCarsOutS.configure(state = 'normal')
+				
                 tCarsInW.delete("1.0", tk.END)
                 if (carsInW >= 0):
                     tCarsOutE.delete("1.0", tk.END)
@@ -561,10 +603,19 @@ def cycleWE():
                     carsInW -= (rightLaneCars + straightLaneCars)
                     carsOutE += straightLaneCars
                     carsOutS += rightLaneCars
+										
                     tCarsInW.insert("1.0", math.floor(carsInW))
                     tCarsOutE.insert("1.0", math.floor(carsOutE))
                     tCarsOutS.insert("1.0", math.floor(carsOutS))
-
+					
+                    tCarsInW.configure(state = 'disabled')
+                    tCarsOutE.configure(state = 'disabled')
+                    tCarsOutS.configure(state = 'disabled')
+					
+                tCarsInE.configure(state = 'normal')
+                tCarsOutW.configure(state = 'normal')
+                tCarsOutN.configure(state = 'normal')
+				
                 tCarsInE.delete("1.0", tk.END)
                 if (carsInE >= 0):
                     tCarsOutW.delete("1.0", tk.END)
@@ -582,10 +633,15 @@ def cycleWE():
                     carsInE -= (rightLaneCars + straightLaneCars)
                     carsOutW += straightLaneCars
                     carsOutN += rightLaneCars
+										
                     tCarsInE.insert("1.0", math.floor(carsInE))
                     tCarsOutW.insert("1.0", math.floor(carsOutW))
                     tCarsOutN.insert("1.0", math.floor(carsOutN))
-
+					
+                    tCarsInE.configure(state = 'disabled')		
+                    tCarsOutW.configure(state = 'disabled')		
+                    tCarsOutN.configure(state = 'disabled')	
+					
                 currSecond += 1
             currTime = time.time() - startTime
             root.after(sampleDelay, cycleWE)
@@ -619,7 +675,10 @@ def cycleWEGrnArr():
                 lCurrTime["text"] = currSecond + 1
 
                 currRate = calculateCurrRate(currTime)
-
+				
+                tCarsInW.configure(state = 'normal')
+                tCarsOutN.configure(state = 'normal')
+				
                 tCarsInW.delete("1.0", tk.END)
                 if (carsInW >= 0):
                     tCarsOutN.delete("1.0", tk.END)
@@ -632,9 +691,16 @@ def cycleWEGrnArr():
 
                     carsInW -= leftLaneCars
                     carsOutN += leftLaneCars
+	
                     tCarsInW.insert("1.0", math.floor(carsInW))
                     tCarsOutN.insert("1.0", math.floor(carsOutN))
-
+					
+                    tCarsInW.configure(state = 'disabled')
+                    tCarsOutN.configure(state = 'disabled')
+					
+                tCarsInE.configure(state = 'normal')
+                tCarsOutS.configure(state = 'normal')
+				
                 tCarsInE.delete("1.0", tk.END)
                 if (carsInE >= 0):
                     tCarsOutS.delete("1.0", tk.END)
@@ -647,9 +713,13 @@ def cycleWEGrnArr():
 
                     carsInE -= leftLaneCars
                     carsOutS += leftLaneCars
+					
                     tCarsInE.insert("1.0", math.floor(carsInE))
                     tCarsOutS.insert("1.0", math.floor(carsOutS))
-
+					
+                    tCarsInE.configure(state = 'disabled')
+                    tCarsOutS.configure(state = 'disabled')
+					
                 currSecond += 1
             currTime = time.time() - startTime
             root.after(sampleDelay, cycleWEGrnArr)
@@ -670,6 +740,11 @@ def inflowCars():
     carsInE += float(tInflowE.get("1.0", "end-1c"))
     carsInS += float(tInflowS.get("1.0", "end-1c"))
 
+    tCarsInW.configure(state = 'normal')
+    tCarsInN.configure(state = 'normal')
+    tCarsInE.configure(state = 'normal')
+    tCarsInS.configure(state = 'normal')
+	
     tCarsInW.delete("1.0", tk.END)
     tCarsInN.delete("1.0", tk.END)
     tCarsInE.delete("1.0", tk.END)
@@ -679,6 +754,11 @@ def inflowCars():
     tCarsInN.insert("1.0", math.floor(carsInN))
     tCarsInE.insert("1.0", math.floor(carsInE))
     tCarsInS.insert("1.0", math.floor(carsInS))
+	
+    tCarsInW.configure(state = 'disabled')
+    tCarsInN.configure(state = 'disabled')
+    tCarsInE.configure(state = 'disabled')
+    tCarsInS.configure(state = 'disabled')
 
 """
 description- Stops the simulation if running
@@ -688,6 +768,7 @@ return-
 def stopSim(event=None):
     global simActive
     simActive = False
+    enableEdits()
     bRunSim["state"] = "normal"
     bStopSim["state"] = "disabled"
 
@@ -760,6 +841,92 @@ def timeChange(*args):
     elif(currDayTime.get() == "Night"):
         flowRateScalar = 1.5
         flowDelayScalar = 1
+		
+"""
+description-disable all text boxes so that user cannot modify them
+parameters-
+return-
+"""		
+def disableEdits():
+	tCarsInW.configure(state = 'disabled')
+	tCarsInN.configure(state = 'disabled')
+	tCarsInE.configure(state = 'disabled')
+	tCarsInS.configure(state = 'disabled')
+	tCarsOutW.configure(state = 'disabled')
+	tCarsOutN.configure(state = 'disabled')
+	tCarsOutE.configure(state = 'disabled')
+	tCarsOutS.configure(state = 'disabled')
+	tTimeNS.configure(state = 'disabled')
+	
+	tTimeNSGrnArr.configure(state = 'disabled')
+	tTimeWE.configure(state = 'disabled')
+	tTimeWEGrnArr.configure(state = 'disabled')
+
+	tInflowW.configure(state = 'disabled')
+	tInflowN.configure(state = 'disabled')
+	tInflowE.configure(state = 'disabled')
+	tInflowS.configure(state = 'disabled')
+
+	tRightW.configure(state = 'disabled')
+	tStraightW.configure(state = 'disabled')
+	tLeftW.configure(state = 'disabled')
+
+	tRightN.configure(state = 'disabled')
+	tStraightN.configure(state = 'disabled')
+	tLeftN.configure(state = 'disabled')
+
+	tRightE.configure(state = 'disabled')
+	tStraightE.configure(state = 'disabled')
+	tLeftE.configure(state = 'disabled')
+
+	tRightS.configure(state = 'disabled')
+	tStraightS.configure(state = 'disabled')
+	tLeftS.configure(state = 'disabled')
+
+	tMaxFlowRate.configure(state = 'disabled')
+
+"""
+description-enables all text boxes so that users can modify them
+parameters-
+return-
+"""
+def enableEdits():
+	tCarsInW.configure(state = 'normal')
+	tCarsInN.configure(state = 'normal')
+	tCarsInE.configure(state = 'normal')
+	tCarsInS.configure(state = 'normal')
+	tCarsOutW.configure(state = 'normal')
+	tCarsOutN.configure(state = 'normal')
+	tCarsOutE.configure(state = 'normal')
+	tCarsOutS.configure(state = 'normal')
+	tTimeNS.configure(state = 'normal')
+	
+	tTimeNSGrnArr.configure(state = 'normal')
+	tTimeWE.configure(state = 'normal')
+	tTimeWEGrnArr.configure(state = 'normal')
+
+	tInflowW.configure(state = 'normal')
+	tInflowN.configure(state = 'normal')
+	tInflowE.configure(state = 'normal')
+	tInflowS.configure(state = 'normal')
+
+	tRightW.configure(state = 'normal')
+	tStraightW.configure(state = 'normal')
+	tLeftW.configure(state = 'normal')
+
+	tRightN.configure(state = 'normal')
+	tStraightN.configure(state = 'normal')
+	tLeftN.configure(state = 'normal')
+
+	tRightE.configure(state = 'normal')
+	tStraightE.configure(state = 'normal')
+	tLeftE.configure(state = 'normal')
+
+	tRightS.configure(state = 'normal')
+	tStraightS.configure(state = 'normal')
+	tLeftS.configure(state = 'normal')
+
+	tMaxFlowRate.configure(state = 'normal')
 
 # CALLBACK BINDINGS
 bRunSim.bind("<Button-1>", startSim)
