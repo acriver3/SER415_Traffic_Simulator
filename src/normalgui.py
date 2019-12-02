@@ -767,10 +767,32 @@ return-
 """
 def stopSim(event=None):
     global simActive
+    global tCarsOutE, tCarsOutN, tCarsOutS, tCarsOutW
+    global carsInN, carsInS, carsInW, carsInE
     simActive = False
     enableEdits()
     bRunSim["state"] = "normal"
     bStopSim["state"] = "disabled"
+
+    tCarsOutS.delete('1.0', tk.END)
+    tCarsOutW.delete('1.0', tk.END)
+    tCarsOutN.delete('1.0', tk.END)
+    tCarsOutE.delete('1.0', tk.END)
+
+    tCarsOutW.insert('1.0', '0')
+    tCarsOutN.insert('1.0', '0')
+    tCarsOutE.insert('1.0', '0')
+    tCarsOutS.insert('1.0', '0')
+
+    tCarsInS.delete('1.0', tk.END)
+    tCarsInW.delete('1.0', tk.END)
+    tCarsInN.delete('1.0', tk.END)
+    tCarsInE.delete('1.0', tk.END)
+
+    tCarsInW.insert('1.0', '30')
+    tCarsInN.insert('1.0', '30')
+    tCarsInE.insert('1.0', '30')
+    tCarsInS.insert('1.0', '30')
 
 """
 description- Returns the traffic flow rate at a specific time since GREEN light activated
