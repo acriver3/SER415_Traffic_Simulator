@@ -285,13 +285,13 @@ dayTime.place(relx=0.775, rely=0.76, height=25, width=125)
 # ---Buttons---
 # 'Run Simulation' button
 bRunSim = tk.Button(top, text="Run Simulation", bg="#90EE90")
-bRunSim.place(relx=0.054, rely=0.11, height=34, width=97)
+bRunSim.place(relx=0.054, rely=0.095, height=34, width=97)
 
 bStopSim = tk.Button(top, text="Stop", bg="#FFCCCB", state="disabled")
-bStopSim.place(relx=0.18, rely=0.11, height=34, width=40)
+bStopSim.place(relx=0.18, rely=0.095, height=34, width=40)
 
 bResetSim = tk.Button(top, text="Reset", bg="#FFBA00", state="normal")
-bResetSim.place(relx=0.24, rely=0.11, height=34, width=40)
+bResetSim.place(relx=0.24, rely=0.095, height=34, width=40)
 
 
 #-------------------------------------------------------------------------------
