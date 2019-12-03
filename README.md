@@ -7,30 +7,30 @@
 
 <b>SOURCE FUNCTIONS<b>
 
-    startSim(event)
+    startSim(event) - Starts simulation when user clicks 'Run Simulation' button.
 
-    cycleNS()
+    cycleNS() - Cycles through North/South green state.
     
-    cycleNSGrnArr()
+    cycleNSGrnArr() - Cycles through North/South green arrow state.
 
-    cycleWE()
+    cycleWE() - Cycles through West/East green state.
     
-    cycleWEGrnArr()
+    cycleWEGrnArr() - Cycles through West/East green arrow state.
     
-    inflowCars()
+    inflowCars() - Inflow cars waiting at intersection based on user input.
     
-    stopSim(event)
+    stopSim(event) - Stops the simulation if running.
 
-    resetSim(event)
+    resetSim(event) - Resets the simulation if running.
 
-    calculateCurrRate(t)
+    calculateCurrRate(t) - Returns the traffic flow rate at a specific time since GREEN light activated.
     
-    scenarioChange(*args)
+    scenarioChange(*args) - Updates flow rate/flow delay scalars based on scenario selection.
     
-    dayChange(*args)
+    dayChange(*args) - Updates flow rate/flow delay scalars based on day selection.
     
-    timeChange(*args)
+    timeChange(*args) - Updates flow rate/flow delay scalars based on time of day selection.
     
-    disableEdits()
+    disableEdits() - Disables all text boxes so that user cannot modify them.
     
-    enableEdits()
+    enableEdits() - Enables all text boxes so that users can modify them.
