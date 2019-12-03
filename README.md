@@ -2,6 +2,10 @@
 
 ### Team: Manolito Ramirez, Jessica Gilbert, Mike Wagner, Carlos Franco, Arthur Rivera, and Ryan Kirmis
 
+<b>SETUP INSTRUCTIONS<b>
+
+To run the traffic simulator, either double-click the executable (), or run the source code with Python using the following commands (starting from root project directory):
+
 <b>SOURCE FUNCTIONS<b>
 
     startSim(event) - Starts simulation when user clicks 'Run Simulation' button.
