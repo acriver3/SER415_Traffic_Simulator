@@ -106,6 +106,11 @@ redLightE = intersection.create_image(234, 167, image=redLight, anchor="nw", sta
 greenLightS = intersection.create_image(180, 238, image=greenLight, anchor="nw", state="hidden")
 redLightS = intersection.create_image(180, 221, image=redLight, anchor="nw", state="hidden")
 
+# Cars for animations
+carE = tk.PhotoImage(file="../resources/car_east.png")
+carN = tk.PhotoImage(file="../resources/car_north.png")
+carS = tk.PhotoImage(file="../resources/car_south.png")
+carW = tk.PhotoImage(file="../resources/car_west.png")
 
 # ---Frames---
 # Timing value input frame
@@ -558,6 +563,11 @@ def cycleWE():
                         # scale down straight lane cars
                         straightLaneCars = carsInW - rightLaneCars
 
+                    ws = round(straightLaneCars)
+                    while ws > 0:
+                        animateWS()
+                        ws -= 1
+
                     carsInW -= (rightLaneCars + straightLaneCars)
                     carsOutE += straightLaneCars
                     carsOutS += rightLaneCars
@@ -760,6 +770,10 @@ def timeChange(*args):
     elif(currDayTime.get() == "Night"):
         flowRateScalar = 1.5
         flowDelayScalar = 1
+
+def animateWS():
+    global intersection, carW
+    car = intersection.create_image(10, 209, image=carW, anchor="nw")
 
 # CALLBACK BINDINGS
 bRunSim.bind("<Button-1>", startSim)
