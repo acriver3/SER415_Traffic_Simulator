@@ -1,4 +1,4 @@
-# SER415 Traffic Simulator - Team 6
+# SER415 Traffic Simulator - Team 8
 
 ### Team: Manolito Ramirez, Jessica Gilbert, Mike Wagner, Carlos Franco, Arthur Rivera, and Ryan Kirmis
 
