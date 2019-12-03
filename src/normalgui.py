@@ -288,7 +288,7 @@ bRunSim.place(relx=0.054, rely=0.11, height=34, width=97)
 bStopSim = tk.Button(top, text="Stop", bg="#FFCCCB", state="disabled")
 bStopSim.place(relx=0.18, rely=0.11, height=34, width=40)
 
-bResetSim = tk.Button(top, text="Reset", bg="#FFBA00", state="disabled")
+bResetSim = tk.Button(top, text="Reset", bg="#FFBA00", state="normal")
 bResetSim.place(relx=0.24, rely=0.11, height=34, width=40)
 
 
@@ -296,9 +296,10 @@ bResetSim.place(relx=0.24, rely=0.11, height=34, width=40)
 # FUNCTIONS
 
 """
-description- Starts simulation when user clicks 'Run Simulation' button
+description- Starts simulation when user clicks 'Run Simulation' button.
 parameters-
-return-
+    event- event object for callback binding
+return- void
 """
 def startSim(event=None):
     global currTime, startTime, currSecond, currCycle, simActive
@@ -306,17 +307,21 @@ def startSim(event=None):
     global redLightW, redLightN, redLightE, redLightS
     global carsInW, carsInN, carsInE, carsInS
 
+    # disable text fields
     disableEdits()
 
+    # get cycle length user inputs
     cycleLengths[0] = int(tTimeNS.get("1.0", "end-1c"));
     cycleLengths[1] = int(tTimeNSGrnArr.get("1.0", "end-1c"));
     cycleLengths[2] = int(tTimeWE.get("1.0", "end-1c"));
     cycleLengths[3] = int(tTimeWEGrnArr.get("1.0", "end-1c"));
 
+    # set simulation to active
     simActive = True
     bRunSim["state"] = "disabled"
     bStopSim["state"] = "normal"
 
+    # set up cycle timing
     startTime = time.time()
     currTime = time.time() - startTime
     currSecond = 0
@@ -326,7 +331,7 @@ def startSim(event=None):
     carsInE = float(tCarsInE.get("1.0", "end-1c"))
     carsInS = float(tCarsInS.get("1.0", "end-1c"))
 
-    if (currCycle == 0):
+    if (currCycle == 0): # North/South green cycle
         intersection.itemconfig(greenLightW, state="hidden")
         intersection.itemconfig(redLightW, state="normal")
         intersection.itemconfig(greenLightN, state="normal")
@@ -337,7 +342,7 @@ def startSim(event=None):
         intersection.itemconfig(redLightS, state="hidden")
 
         root.after(0, cycleNS)
-    elif (currCycle == 1):
+    elif (currCycle == 1): # North/South green arrow cycle
         intersection.itemconfig(greenLightW, state="hidden")
         intersection.itemconfig(redLightW, state="normal")
         intersection.itemconfig(greenLightN, state="normal")
@@ -348,7 +353,7 @@ def startSim(event=None):
         intersection.itemconfig(redLightS, state="hidden")
 
         root.after(0, cycleNSGrnArr)
-    elif (currCycle == 2):
+    elif (currCycle == 2): # East/West green cycle
         intersection.itemconfig(greenLightW, state="normal")
         intersection.itemconfig(redLightW, state="hidden")
         intersection.itemconfig(greenLightN, state="hidden")
@@ -359,7 +364,7 @@ def startSim(event=None):
         intersection.itemconfig(redLightS, state="normal")
 
         root.after(0, cycleWE)
-    elif (currCycle == 3):
+    elif (currCycle == 3): # East/West green arrow cycle
         intersection.itemconfig(greenLightW, state="normal")
         intersection.itemconfig(redLightW, state="hidden")
         intersection.itemconfig(greenLightN, state="hidden")
@@ -370,7 +375,7 @@ def startSim(event=None):
         intersection.itemconfig(redLightS, state="normal")
 
         root.after(0, cycleWEGrnArr)
-    else:
+    else: # if not cycle 0-3, stop simulation
         simActive = False
         bRunSim["state"] = "normal"
         bStopSim["state"] = "disabled"
@@ -379,16 +384,19 @@ def startSim(event=None):
         currCycle = 0
 
 """
-description-
-parameters-
-return-
+description- Cycles through North/South green state.
+parameters- none
+return- void
 """
 def cycleNS():
     global currTime, startTime, currSecond, currCycle, cycleLengths, simActive
     global carsInN, carsInS, carsOutS, carsOutW, carsOutN, carsOutE
 
+    # if simulation is active
     if (simActive):
+        # if start of cycle (first second sample)
         if (currSecond == 0):
+            # retrieve user inputs
             carsInN = float(tCarsInN.get("1.0", "end-1c"))
             carsInS = float(tCarsInS.get("1.0", "end-1c"))
 
@@ -399,12 +407,14 @@ def cycleNS():
 
             lCurrCycle["text"] = "N/S"
 
+        # if time has not expired
         if (currTime < cycleLengths[currCycle]):
             if (currTime > currSecond):
                 inflowCars()
 
                 lCurrTime["text"] = currSecond + 1
 
+                # calculate current rate
                 currRate = calculateCurrRate(currTime)
 
                 tCarsInN.configure(state = 'normal')
@@ -412,13 +422,17 @@ def cycleNS():
                 tCarsOutW.configure(state = 'normal')
 
                 tCarsInN.delete("1.0", tk.END)
+
+                # if cars are waiting
                 if (carsInN >= 0):
                     tCarsOutS.delete("1.0", tk.END)
                     tCarsOutW.delete("1.0", tk.END)
 
+                    # calculate cars in each lane
                     rightLaneCars = currRate * float(tRightN.get("1.0", "end-1c"))
                     straightLaneCars = currRate * float(tStraightN.get("1.0", "end-1c"))
 
+                    # if 'cars in' will be negative
                     if ((carsInN - (rightLaneCars + straightLaneCars)) <= 0):
                         # scale down right lane cars to match with actual cars waiting
                         rightLaneCars = round(carsInN * (rightLaneCars / (rightLaneCars + straightLaneCars)), 2)
@@ -442,13 +456,17 @@ def cycleNS():
                 tCarsOutE.configure(state = 'normal')
 
                 tCarsInS.delete("1.0", tk.END)
+
+                # if cars are waiting
                 if (carsInS >= 0):
                     tCarsOutN.delete("1.0", tk.END)
                     tCarsOutE.delete("1.0", tk.END)
 
+                    # calculate cars in each lane
                     rightLaneCars = currRate * float(tRightS.get("1.0", "end-1c"))
                     straightLaneCars = currRate * float(tStraightS.get("1.0", "end-1c"))
 
+                    # if 'cars in' will be negative
                     if ((carsInS - (rightLaneCars + straightLaneCars)) <= 0):
                         # scale down right lane cars to match with actual cars waiting
                         rightLaneCars = round(carsInS * (rightLaneCars / (rightLaneCars + straightLaneCars)), 2)
@@ -475,16 +493,19 @@ def cycleNS():
             root.after(0, startSim)
 
 """
-description-
-parameters-
-return-
+description- Cycles through North/South green arrow state.
+parameters- none
+return- void
 """
 def cycleNSGrnArr():
     global currTime, startTime, currSecond, currCycle, cycleLengths, simActive
     global carsInN, carsInS, carsOutE, carsOutW
 
+    # if simulation is active
     if (simActive):
+        # if start of cycle (first second sample)
         if (currSecond == 0):
+            # retrieve user inputs
             carsInN = float(tCarsInN.get("1.0", "end-1c"))
             carsInS = float(tCarsInS.get("1.0", "end-1c"))
 
@@ -493,23 +514,29 @@ def cycleNSGrnArr():
 
             lCurrCycle["text"] = "N/S Arrow"
 
+        # if time has not expired
         if (currTime < cycleLengths[currCycle]):
             if (currTime > currSecond):
                 inflowCars()
 
                 lCurrTime["text"] = currSecond + 1
 
+                # calculate current rate
                 currRate = calculateCurrRate(currTime)
 
                 tCarsInN.configure(state = 'normal')
                 tCarsOutE.configure(state = 'normal')
 
                 tCarsInN.delete("1.0", tk.END)
+
+                # if cars are waiting
                 if (carsInN >= 0):
                     tCarsOutE.delete("1.0", tk.END)
 
+                    # calculate cars in left lane
                     leftLaneCars = currRate * float(tLeftN.get("1.0", "end-1c"))
 
+                    # if 'cars in' will be negative
                     if ((carsInN - leftLaneCars) <= 0):
                         # scale down left lane cars to match with actual cars waiting
                         leftLaneCars = carsInN
@@ -527,11 +554,15 @@ def cycleNSGrnArr():
                 tCarsOutW.configure(state = 'normal')
 
                 tCarsInS.delete("1.0", tk.END)
+
+                # if cars are waiting
                 if (carsInS >= 0):
                     tCarsOutW.delete("1.0", tk.END)
 
+                    # calculate cars in left lane
                     leftLaneCars = currRate * float(tLeftS.get("1.0", "end-1c"))
 
+                    # if 'cars in' will be negative
                     if ((carsInS - leftLaneCars) <= 0):
                         # scale down left lane cars to match with actual cars waiting
                         leftLaneCars = carsInS
@@ -553,16 +584,19 @@ def cycleNSGrnArr():
             root.after(0, startSim)
 
 """
-description-
-parameters-
-return-
+description- Cycles through West/East green state.
+parameters- none
+return- void
 """
 def cycleWE():
     global currTime, startTime, currSecond, currCycle, cycleLengths, simActive
     global carsInW, carsInE, carsOutE, carsOutS, carsOutW, carsOutN
 
+    # if simulation is active
     if (simActive):
+        # if start of cycle (first second sample)
         if (currSecond == 0):
+            # retrieve user inputs
             carsInW = float(tCarsInW.get("1.0", "end-1c"))
             carsInE = float(tCarsInE.get("1.0", "end-1c"))
 
@@ -573,12 +607,14 @@ def cycleWE():
 
             lCurrCycle["text"] = "W/E"
 
+        # if time has not expired
         if (currTime < cycleLengths[currCycle]):
             if (currTime > currSecond):
                 inflowCars()
 
                 lCurrTime["text"] = currSecond + 1
 
+                # calculate current rate
                 currRate = calculateCurrRate(currTime)
 
                 tCarsInW.configure(state = 'normal')
@@ -586,13 +622,17 @@ def cycleWE():
                 tCarsOutS.configure(state = 'normal')
 
                 tCarsInW.delete("1.0", tk.END)
+
+                # if cars are waiting
                 if (carsInW >= 0):
                     tCarsOutE.delete("1.0", tk.END)
                     tCarsOutS.delete("1.0", tk.END)
 
+                    # calculate cars in each lane
                     rightLaneCars = currRate * float(tRightW.get("1.0", "end-1c"))
                     straightLaneCars = currRate * float(tStraightW.get("1.0", "end-1c"))
 
+                    # if 'cars in' will be negative
                     if ((carsInW - (rightLaneCars + straightLaneCars)) <= 0):
                         # scale down right lane cars to match with actual cars waiting
                         rightLaneCars = round(carsInW * (rightLaneCars / (rightLaneCars + straightLaneCars)), 2)
@@ -616,13 +656,17 @@ def cycleWE():
                 tCarsOutN.configure(state = 'normal')
 
                 tCarsInE.delete("1.0", tk.END)
+
+                # if cars are waiting
                 if (carsInE >= 0):
                     tCarsOutW.delete("1.0", tk.END)
                     tCarsOutN.delete("1.0", tk.END)
 
+                    # calculate cars in each lane
                     rightLaneCars = currRate * float(tRightE.get("1.0", "end-1c"))
                     straightLaneCars = currRate * float(tStraightE.get("1.0", "end-1c"))
 
+                    # if 'cars in' will be negative
                     if ((carsInE - (rightLaneCars + straightLaneCars)) <= 0):
                         # scale down right lane cars to match with actual cars waiting
                         rightLaneCars = round(carsInE * (rightLaneCars / (rightLaneCars + straightLaneCars)), 2)
@@ -649,16 +693,19 @@ def cycleWE():
             root.after(0, startSim)
 
 """
-description-
-parameters-
-return-
+description- Cycles through West/East green arrow state.
+parameters- none
+return- void
 """
 def cycleWEGrnArr():
     global currTime, startTime, currSecond, currCycle, cycleLengths, simActive
     global carsInW, carsInE, carsOutN, carsOutS
 
+    # if simulation is active
     if (simActive):
+        # if start of cycle (first second sample)
         if (currSecond == 0):
+            # retrieve user inputs
             carsInW = float(tCarsInW.get("1.0", "end-1c"))
             carsInE = float(tCarsInE.get("1.0", "end-1c"))
 
@@ -667,23 +714,29 @@ def cycleWEGrnArr():
 
             lCurrCycle["text"] = "W/E Arrow"
 
+        # if time has not expired
         if (currTime < cycleLengths[currCycle]):
             if (currTime > currSecond):
                 inflowCars()
 
                 lCurrTime["text"] = currSecond + 1
 
+                # calculate current rate
                 currRate = calculateCurrRate(currTime)
 
                 tCarsInW.configure(state = 'normal')
                 tCarsOutN.configure(state = 'normal')
 
                 tCarsInW.delete("1.0", tk.END)
+
+                # if cars are waiting
                 if (carsInW >= 0):
                     tCarsOutN.delete("1.0", tk.END)
 
+                    # calculate cars in left lane
                     leftLaneCars = currRate * float(tLeftW.get("1.0", "end-1c"))
 
+                    # if 'cars in' will be negative
                     if ((carsInW - leftLaneCars) <= 0):
                         # scale down left lane cars to match with actual cars waiting
                         leftLaneCars = carsInW
@@ -701,11 +754,15 @@ def cycleWEGrnArr():
                 tCarsOutS.configure(state = 'normal')
 
                 tCarsInE.delete("1.0", tk.END)
+
+                # if cars are waiting
                 if (carsInE >= 0):
                     tCarsOutS.delete("1.0", tk.END)
 
+                    # calculate cars in left lane
                     leftLaneCars = currRate * float(tLeftE.get("1.0", "end-1c"))
 
+                    # if 'cars in' will be negative
                     if ((carsInE - leftLaneCars) <= 0):
                         # scale down left lane cars to match with actual cars waiting
                         leftLaneCars = carsInE
@@ -727,9 +784,9 @@ def cycleWEGrnArr():
             root.after(0, startSim)
 
 """
-description-
-parameters-
-return-
+description- Inflow cars waiting at intersection based on user input.
+parameters- none
+return- void
 """
 def inflowCars():
     global carsInW, carsInN, carsInE, carsInS
@@ -760,33 +817,38 @@ def inflowCars():
     tCarsInS.configure(state = 'disabled')
 
 """
-description- Stops the simulation if running
+description- Stops the simulation if running.
 parameters-
-return-
+    event- event object for callback binding
+return- void
 """
 def stopSim(event=None):
     global simActive
     global tCarsOutE, tCarsOutN, tCarsOutS, tCarsOutW
     global carsInN, carsInS, carsInW, carsInE
     simActive = False
+    # enable user inputs
     enableEdits()
     bRunSim["state"] = "normal"
     bStopSim["state"] = "disabled"
 
 """
-description- Resets the simulation if running
+description- Resets the simulation if running.
 parameters-
-return-
+    event - event object for callback binding
+return- void
 """
 def resetSim(event=None):
     global simActive
     global tCarsOutE, tCarsOutN, tCarsOutS, tCarsOutW
     global carsInN, carsInS, carsInW, carsInE
     simActive = False
+    # enable user inputs
     enableEdits()
     bRunSim["state"] = "normal"
     bStopSim["state"] = "disabled"
 
+    # reset fields to defaults
     tCarsOutS.delete('1.0', tk.END)
     tCarsOutW.delete('1.0', tk.END)
     tCarsOutN.delete('1.0', tk.END)
@@ -808,13 +870,17 @@ def resetSim(event=None):
     tCarsInS.insert('1.0', '30')
 
 """
-description- Returns the traffic flow rate at a specific time since GREEN light activated
+description- Returns the traffic flow rate at a specific time since GREEN light activated.
 parameters-
+    t- current time (second) since green light activated
 return-
+    flowRate- flow rate at specific time
 """
 def calculateCurrRate(t):
     global maxFlowRate, flowRateScalar, flowDelayScalar
+    # divide flow rate by 2
     maxFlowRate = float(tMaxFlowRate.get("1.0", "end-1c")) / 2
+    # calculate y offset
     offsetY = maxFlowRate * flowRateScalar
 
     # calculate flow rate
@@ -830,9 +896,10 @@ def calculateCurrRate(t):
     return flowRate
 
 """
-description- Updates flow rate/flow delay scalars based on scenario selection
+description- Updates flow rate/flow delay scalars based on scenario selection.
 parameters-
-return-
+    args
+return- void
 """
 def scenarioChange(*args):
     global flowRateScalar, flowDelayScalar
@@ -851,9 +918,16 @@ def scenarioChange(*args):
         flowRateScalar = 0.4
         flowDelayScalar = 0.5
 
+"""
+description- Updates flow rate/flow delay scalars based on day selection.
+parameters-
+    args
+return- void
+"""
 def dayChange(*args):
     global flowRateScalar, flowDelayScalar
 
+    # change based on selected day of week
     if(currDay.get() == "Monday" or currDay.get() == "Wednesday" or currDay.get() == "Friday"):
         flowRateScalar = 1
         flowDelayScalar = 1
@@ -864,9 +938,16 @@ def dayChange(*args):
         flowRateScalar = 1.2
         flowDelayScalar = 1
 
+"""
+description- Updates flow rate/flow delay scalars based on time of day selection.
+parameters-
+    args
+return- void
+"""
 def timeChange(*args):
     global flowRateScalar, flowDelayScalar
 
+    # change based on selected time of day
     if(currDayTime.get() == "Morning" or currDayTime.get() == "Evening"):
         flowRateScalar = 0.5
         flowDelayScalar = 0.4
@@ -878,9 +959,9 @@ def timeChange(*args):
         flowDelayScalar = 1
 
 """
-description-disable all text boxes so that user cannot modify them
-parameters-
-return-
+description- Disables all text boxes so that user cannot modify them.
+parameters- none
+return- void
 """
 def disableEdits():
 	tCarsInW.configure(state = 'disabled')
@@ -921,9 +1002,9 @@ def disableEdits():
 	tMaxFlowRate.configure(state = 'disabled')
 
 """
-description-enables all text boxes so that users can modify them
-parameters-
-return-
+description- Enables all text boxes so that users can modify them.
+parameters- none
+return- void
 """
 def enableEdits():
 	tCarsInW.configure(state = 'normal')
