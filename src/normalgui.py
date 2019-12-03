@@ -647,6 +647,7 @@ def cycleWE():
                     ws = round(straightLaneCars)
                     while ws > 0:
                         animateWS()
+                        time.sleep(1)
                         ws -= 1
 
                     carsInW -= (rightLaneCars + straightLaneCars)
@@ -970,13 +971,14 @@ def timeChange(*args):
 
 
 def animateWS():
-    global intersection, carW
+    global intersection, carW, root
     car = intersection.create_image(10, 193, image=carW, anchor="nw")
-    #for i in range (round(intersection.winfo_width()/5)):
-    time.sleep(2)
-    intersection.move(car, 50, 0)
-    time.sleep(2)
-    intersection.move(car, 50, 0)
+    root.update()
+    time.sleep(0.05)
+    for i in range (round(intersection.winfo_width())):
+        intersection.move(car, 1, 0)
+        root.update()
+        time.sleep(0.05)
 
 """
 description- Disables all text boxes so that user cannot modify them.
