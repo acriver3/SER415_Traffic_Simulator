@@ -971,7 +971,12 @@ def timeChange(*args):
 
 def animateWS():
     global intersection, carW
-    car = intersection.create_image(10, 209, image=carW, anchor="nw")
+    car = intersection.create_image(10, 193, image=carW, anchor="nw")
+    #for i in range (round(intersection.winfo_width()/5)):
+    time.sleep(2)
+    intersection.move(car, 50, 0)
+    time.sleep(2)
+    intersection.move(car, 50, 0)
 
 """
 description- Disables all text boxes so that user cannot modify them.
