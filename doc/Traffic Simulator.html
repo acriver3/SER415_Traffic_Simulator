@@ -1,0 +1,172 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module Traffic Simulator</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>Traffic Simulator</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:c%3A%5Cusers%5Cthe%20last%20jedi%5Cdesktop%5Cser415%5Csrc%5Ctraffic%20simulator.py">c:\users\the last jedi\desktop\ser415\src\traffic simulator.py</a></font></td></tr></table>
+    <p><tt>SER415&nbsp;Traffic&nbsp;Simulator&nbsp;-&nbsp;Team&nbsp;8<br>
+Manolito&nbsp;Ramirez,&nbsp;Jessica&nbsp;Gilbert,&nbsp;Mike&nbsp;Wagner,<br>
+Carlos&nbsp;Franco,&nbsp;Arthur&nbsp;Rivera,&nbsp;and&nbsp;Ryan&nbsp;Kirmis<br>
+Version&nbsp;1.1.1</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="math.html">math</a><br>
+</td><td width="25%" valign=top><a href="time.html">time</a><br>
+</td><td width="25%" valign=top><a href="tkinter.html">tkinter</a><br>
+</td><td width="25%" valign=top><a href="tkinter.html">tkinter</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-calculateCurrRate"><strong>calculateCurrRate</strong></a>(t)</dt><dd><tt>description-&nbsp;Returns&nbsp;the&nbsp;traffic&nbsp;flow&nbsp;rate&nbsp;at&nbsp;a&nbsp;specific&nbsp;time&nbsp;since&nbsp;GREEN&nbsp;light&nbsp;activated.<br>
+parameters-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;t:&nbsp;current&nbsp;time&nbsp;(second)&nbsp;since&nbsp;green&nbsp;light&nbsp;activated<br>
+return-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;flowRate:&nbsp;flow&nbsp;rate&nbsp;at&nbsp;specific&nbsp;time</tt></dd></dl>
+ <dl><dt><a name="-cycleNS"><strong>cycleNS</strong></a>()</dt><dd><tt>description-&nbsp;Cycles&nbsp;through&nbsp;North/South&nbsp;green&nbsp;state.<br>
+parameters-&nbsp;none<br>
+return-&nbsp;void</tt></dd></dl>
+ <dl><dt><a name="-cycleNSGrnArr"><strong>cycleNSGrnArr</strong></a>()</dt><dd><tt>description-&nbsp;Cycles&nbsp;through&nbsp;North/South&nbsp;green&nbsp;arrow&nbsp;state.<br>
+parameters-&nbsp;none<br>
+return-&nbsp;void</tt></dd></dl>
+ <dl><dt><a name="-cycleWE"><strong>cycleWE</strong></a>()</dt><dd><tt>description-&nbsp;Cycles&nbsp;through&nbsp;West/East&nbsp;green&nbsp;state.<br>
+parameters-&nbsp;none<br>
+return-&nbsp;void</tt></dd></dl>
+ <dl><dt><a name="-cycleWEGrnArr"><strong>cycleWEGrnArr</strong></a>()</dt><dd><tt>description-&nbsp;Cycles&nbsp;through&nbsp;West/East&nbsp;green&nbsp;arrow&nbsp;state.<br>
+parameters-&nbsp;none<br>
+return-&nbsp;void</tt></dd></dl>
+ <dl><dt><a name="-dayChange"><strong>dayChange</strong></a>(*args)</dt><dd><tt>description-&nbsp;Updates&nbsp;flow&nbsp;rate/flow&nbsp;delay&nbsp;scalars&nbsp;based&nbsp;on&nbsp;day&nbsp;selection.<br>
+parameters-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;args<br>
+return-&nbsp;void</tt></dd></dl>
+ <dl><dt><a name="-disableEdits"><strong>disableEdits</strong></a>()</dt><dd><tt>description-&nbsp;Disables&nbsp;all&nbsp;text&nbsp;boxes&nbsp;so&nbsp;that&nbsp;user&nbsp;cannot&nbsp;modify&nbsp;them.<br>
+parameters-&nbsp;none<br>
+return-&nbsp;void</tt></dd></dl>
+ <dl><dt><a name="-enableEdits"><strong>enableEdits</strong></a>()</dt><dd><tt>description-&nbsp;Enables&nbsp;all&nbsp;text&nbsp;boxes&nbsp;so&nbsp;that&nbsp;users&nbsp;can&nbsp;modify&nbsp;them.<br>
+parameters-&nbsp;none<br>
+return-&nbsp;void</tt></dd></dl>
+ <dl><dt><a name="-inflowCars"><strong>inflowCars</strong></a>()</dt><dd><tt>description-&nbsp;Inflow&nbsp;cars&nbsp;waiting&nbsp;at&nbsp;intersection&nbsp;based&nbsp;on&nbsp;user&nbsp;input.<br>
+parameters-&nbsp;none<br>
+return-&nbsp;void</tt></dd></dl>
+ <dl><dt><a name="-resetSim"><strong>resetSim</strong></a>(event=None)</dt><dd><tt>description-&nbsp;Resets&nbsp;the&nbsp;simulation&nbsp;if&nbsp;running.<br>
+parameters-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;event:&nbsp;event&nbsp;object&nbsp;for&nbsp;callback&nbsp;binding<br>
+return-&nbsp;void</tt></dd></dl>
+ <dl><dt><a name="-scenarioChange"><strong>scenarioChange</strong></a>(*args)</dt><dd><tt>description-&nbsp;Updates&nbsp;flow&nbsp;rate/flow&nbsp;delay&nbsp;scalars&nbsp;based&nbsp;on&nbsp;scenario&nbsp;selection.<br>
+parameters-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;args<br>
+return-&nbsp;void</tt></dd></dl>
+ <dl><dt><a name="-startSim"><strong>startSim</strong></a>(event=None)</dt><dd><tt>description-&nbsp;Starts&nbsp;simulation&nbsp;when&nbsp;user&nbsp;clicks&nbsp;'Run&nbsp;Simulation'&nbsp;button.<br>
+Parameters:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;event:&nbsp;event&nbsp;object&nbsp;for&nbsp;callback&nbsp;binding<br>
+return-&nbsp;void</tt></dd></dl>
+ <dl><dt><a name="-stopSim"><strong>stopSim</strong></a>(event=None)</dt><dd><tt>description-&nbsp;Stops&nbsp;the&nbsp;simulation&nbsp;if&nbsp;running.<br>
+parameters-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;event:&nbsp;event&nbsp;object&nbsp;for&nbsp;callback&nbsp;binding<br>
+return-&nbsp;void</tt></dd></dl>
+ <dl><dt><a name="-timeChange"><strong>timeChange</strong></a>(*args)</dt><dd><tt>description-&nbsp;Updates&nbsp;flow&nbsp;rate/flow&nbsp;delay&nbsp;scalars&nbsp;based&nbsp;on&nbsp;time&nbsp;of&nbsp;day&nbsp;selection.<br>
+parameters-<br>
+&nbsp;&nbsp;&nbsp;&nbsp;args<br>
+return-&nbsp;void</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>bResetSim</strong> = &lt;tkinter.Button object .!canvas.!button3&gt;<br>
+<strong>bRunSim</strong> = &lt;tkinter.Button object .!canvas.!button&gt;<br>
+<strong>bStopSim</strong> = &lt;tkinter.Button object .!canvas.!button2&gt;<br>
+<strong>carsInE</strong> = 0<br>
+<strong>carsInN</strong> = 0<br>
+<strong>carsInS</strong> = 0<br>
+<strong>carsInW</strong> = 0<br>
+<strong>carsOutE</strong> = 0<br>
+<strong>carsOutN</strong> = 0<br>
+<strong>carsOutS</strong> = 0<br>
+<strong>carsOutW</strong> = 0<br>
+<strong>currCycle</strong> = 0<br>
+<strong>currDay</strong> = &lt;tkinter.StringVar object&gt;<br>
+<strong>currDayTime</strong> = &lt;tkinter.StringVar object&gt;<br>
+<strong>currScenario</strong> = &lt;tkinter.StringVar object&gt;<br>
+<strong>currSecond</strong> = 0<br>
+<strong>currTime</strong> = 0<br>
+<strong>cycleLengths</strong> = [0, 0, 0, 0]<br>
+<strong>dayTime</strong> = &lt;tkinter.OptionMenu object .!canvas.!optionmenu3&gt;<br>
+<strong>days</strong> = &lt;tkinter.OptionMenu object .!canvas.!optionmenu2&gt;<br>
+<strong>fTiming</strong> = &lt;tkinter.Frame object .!canvas.!frame&gt;<br>
+<strong>flowDelayScalar</strong> = 1<br>
+<strong>flowRateScalar</strong> = 1<br>
+<strong>greenLight</strong> = &lt;tkinter.PhotoImage object&gt;<br>
+<strong>greenLightE</strong> = 6<br>
+<strong>greenLightN</strong> = 4<br>
+<strong>greenLightS</strong> = 8<br>
+<strong>greenLightW</strong> = 2<br>
+<strong>intersection</strong> = &lt;tkinter.Canvas object .!canvas.!canvas&gt;<br>
+<strong>lCurrCycle</strong> = &lt;tkinter.Label object .!canvas.!label2&gt;<br>
+<strong>lCurrTime</strong> = &lt;tkinter.Label object .!canvas.!label&gt;<br>
+<strong>lSecondsNS</strong> = &lt;tkinter.Label object .!canvas.!frame.!label5&gt;<br>
+<strong>lSecondsNSGrnArr</strong> = &lt;tkinter.Label object .!canvas.!frame.!label6&gt;<br>
+<strong>lSecondsWE</strong> = &lt;tkinter.Label object .!canvas.!frame.!label7&gt;<br>
+<strong>lSecondsWEGrnArr</strong> = &lt;tkinter.Label object .!canvas.!frame.!label8&gt;<br>
+<strong>lTimeNS</strong> = &lt;tkinter.Label object .!canvas.!frame.!label&gt;<br>
+<strong>lTimeNSGrnArr</strong> = &lt;tkinter.Label object .!canvas.!frame.!label2&gt;<br>
+<strong>lTimeWE</strong> = &lt;tkinter.Label object .!canvas.!frame.!label3&gt;<br>
+<strong>lTimeWEGrnArr</strong> = &lt;tkinter.Label object .!canvas.!frame.!label4&gt;<br>
+<strong>main_bg</strong> = &lt;tkinter.PhotoImage object&gt;<br>
+<strong>maxFlowRate</strong> = 1<br>
+<strong>redLight</strong> = &lt;tkinter.PhotoImage object&gt;<br>
+<strong>redLightE</strong> = 7<br>
+<strong>redLightN</strong> = 5<br>
+<strong>redLightS</strong> = 9<br>
+<strong>redLightW</strong> = 3<br>
+<strong>root</strong> = &lt;tkinter.Tk object .&gt;<br>
+<strong>sampleDelay</strong> = 500<br>
+<strong>scenarios</strong> = &lt;tkinter.OptionMenu object .!canvas.!optionmenu&gt;<br>
+<strong>simActive</strong> = False<br>
+<strong>startTime</strong> = 0<br>
+<strong>tCarsInE</strong> = &lt;tkinter.Text object .!canvas.!text3&gt;<br>
+<strong>tCarsInN</strong> = &lt;tkinter.Text object .!canvas.!text2&gt;<br>
+<strong>tCarsInS</strong> = &lt;tkinter.Text object .!canvas.!text4&gt;<br>
+<strong>tCarsInW</strong> = &lt;tkinter.Text object .!canvas.!text&gt;<br>
+<strong>tCarsOutE</strong> = &lt;tkinter.Text object .!canvas.!text7&gt;<br>
+<strong>tCarsOutN</strong> = &lt;tkinter.Text object .!canvas.!text6&gt;<br>
+<strong>tCarsOutS</strong> = &lt;tkinter.Text object .!canvas.!text8&gt;<br>
+<strong>tCarsOutW</strong> = &lt;tkinter.Text object .!canvas.!text5&gt;<br>
+<strong>tInflowE</strong> = &lt;tkinter.Text object .!canvas.!text11&gt;<br>
+<strong>tInflowN</strong> = &lt;tkinter.Text object .!canvas.!text10&gt;<br>
+<strong>tInflowS</strong> = &lt;tkinter.Text object .!canvas.!text12&gt;<br>
+<strong>tInflowW</strong> = &lt;tkinter.Text object .!canvas.!text9&gt;<br>
+<strong>tLeftE</strong> = &lt;tkinter.Text object .!canvas.!canvas.!text9&gt;<br>
+<strong>tLeftN</strong> = &lt;tkinter.Text object .!canvas.!canvas.!text6&gt;<br>
+<strong>tLeftS</strong> = &lt;tkinter.Text object .!canvas.!canvas.!text12&gt;<br>
+<strong>tLeftW</strong> = &lt;tkinter.Text object .!canvas.!canvas.!text3&gt;<br>
+<strong>tMaxFlowRate</strong> = &lt;tkinter.Text object .!canvas.!text13&gt;<br>
+<strong>tRightE</strong> = &lt;tkinter.Text object .!canvas.!canvas.!text7&gt;<br>
+<strong>tRightN</strong> = &lt;tkinter.Text object .!canvas.!canvas.!text4&gt;<br>
+<strong>tRightS</strong> = &lt;tkinter.Text object .!canvas.!canvas.!text10&gt;<br>
+<strong>tRightW</strong> = &lt;tkinter.Text object .!canvas.!canvas.!text&gt;<br>
+<strong>tStraightE</strong> = &lt;tkinter.Text object .!canvas.!canvas.!text8&gt;<br>
+<strong>tStraightN</strong> = &lt;tkinter.Text object .!canvas.!canvas.!text5&gt;<br>
+<strong>tStraightS</strong> = &lt;tkinter.Text object .!canvas.!canvas.!text11&gt;<br>
+<strong>tStraightW</strong> = &lt;tkinter.Text object .!canvas.!canvas.!text2&gt;<br>
+<strong>tTimeNS</strong> = &lt;tkinter.Text object .!canvas.!frame.!text&gt;<br>
+<strong>tTimeNSGrnArr</strong> = &lt;tkinter.Text object .!canvas.!frame.!text2&gt;<br>
+<strong>tTimeWE</strong> = &lt;tkinter.Text object .!canvas.!frame.!text3&gt;<br>
+<strong>tTimeWEGrnArr</strong> = &lt;tkinter.Text object .!canvas.!frame.!text4&gt;<br>
+<strong>top</strong> = &lt;tkinter.Canvas object .!canvas&gt;</td></tr></table>
+</body></html>

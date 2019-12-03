@@ -2,9 +2,6 @@
 
 ### Team: Manolito Ramirez, Jessica Gilbert, Mike Wagner, Carlos Franco, Arthur Rivera, and Ryan Kirmis
 
-<b>INSTRUCTIONS FOR RUNNING APPLICATION:</b>
-
-
 <b>SOURCE FUNCTIONS<b>
 
     startSim(event) - Starts simulation when user clicks 'Run Simulation' button.

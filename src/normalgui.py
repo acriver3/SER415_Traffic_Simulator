@@ -1,7 +1,9 @@
-# SER415 Traffic Simulator - Team 8
-# Manolito Ramirez, Jessica Gilbert, Mike Wagner,
-# Carlos Franco, Arthur Rivera, and Ryan Kirmis
-# Version 1.1.1
+"""
+SER415 Traffic Simulator - Team 8
+Manolito Ramirez, Jessica Gilbert, Mike Wagner,
+Carlos Franco, Arthur Rivera, and Ryan Kirmis
+Version 1.1.1
+"""
 
 import tkinter as tk
 import tkinter.ttk
@@ -295,13 +297,14 @@ bResetSim.place(relx=0.24, rely=0.11, height=34, width=40)
 #-------------------------------------------------------------------------------
 # FUNCTIONS
 
-"""
-description- Starts simulation when user clicks 'Run Simulation' button.
-parameters-
-    event- event object for callback binding
-return- void
-"""
 def startSim(event=None):
+    """
+    description- Starts simulation when user clicks 'Run Simulation' button.
+    Parameters:
+        event: event object for callback binding
+    return- void
+    """
+
     global currTime, startTime, currSecond, currCycle, simActive
     global greenLightW, greenLightN, greentLightE, greenLightS
     global redLightW, redLightN, redLightE, redLightS
@@ -383,12 +386,13 @@ def startSim(event=None):
         lCurrTime["text"] = 0
         currCycle = 0
 
-"""
-description- Cycles through North/South green state.
-parameters- none
-return- void
-"""
 def cycleNS():
+    """
+    description- Cycles through North/South green state.
+    parameters- none
+    return- void
+    """
+
     global currTime, startTime, currSecond, currCycle, cycleLengths, simActive
     global carsInN, carsInS, carsOutS, carsOutW, carsOutN, carsOutE
 
@@ -492,12 +496,13 @@ def cycleNS():
             currCycle += 1
             root.after(0, startSim)
 
-"""
-description- Cycles through North/South green arrow state.
-parameters- none
-return- void
-"""
 def cycleNSGrnArr():
+    """
+    description- Cycles through North/South green arrow state.
+    parameters- none
+    return- void
+    """
+
     global currTime, startTime, currSecond, currCycle, cycleLengths, simActive
     global carsInN, carsInS, carsOutE, carsOutW
 
@@ -583,12 +588,13 @@ def cycleNSGrnArr():
             currCycle += 1
             root.after(0, startSim)
 
-"""
-description- Cycles through West/East green state.
-parameters- none
-return- void
-"""
 def cycleWE():
+    """
+    description- Cycles through West/East green state.
+    parameters- none
+    return- void
+    """
+
     global currTime, startTime, currSecond, currCycle, cycleLengths, simActive
     global carsInW, carsInE, carsOutE, carsOutS, carsOutW, carsOutN
 
@@ -692,12 +698,13 @@ def cycleWE():
             currCycle += 1
             root.after(0, startSim)
 
-"""
-description- Cycles through West/East green arrow state.
-parameters- none
-return- void
-"""
 def cycleWEGrnArr():
+    """
+    description- Cycles through West/East green arrow state.
+    parameters- none
+    return- void
+    """
+
     global currTime, startTime, currSecond, currCycle, cycleLengths, simActive
     global carsInW, carsInE, carsOutN, carsOutS
 
@@ -783,12 +790,13 @@ def cycleWEGrnArr():
             currCycle = 0
             root.after(0, startSim)
 
-"""
-description- Inflow cars waiting at intersection based on user input.
-parameters- none
-return- void
-"""
 def inflowCars():
+    """
+    description- Inflow cars waiting at intersection based on user input.
+    parameters- none
+    return- void
+    """
+
     global carsInW, carsInN, carsInE, carsInS
 
     carsInW += float(tInflowW.get("1.0", "end-1c"))
@@ -816,13 +824,14 @@ def inflowCars():
     tCarsInE.configure(state = 'disabled')
     tCarsInS.configure(state = 'disabled')
 
-"""
-description- Stops the simulation if running.
-parameters-
-    event- event object for callback binding
-return- void
-"""
 def stopSim(event=None):
+    """
+    description- Stops the simulation if running.
+    parameters-
+        event: event object for callback binding
+    return- void
+    """
+
     global simActive
     global tCarsOutE, tCarsOutN, tCarsOutS, tCarsOutW
     global carsInN, carsInS, carsInW, carsInE
@@ -832,13 +841,14 @@ def stopSim(event=None):
     bRunSim["state"] = "normal"
     bStopSim["state"] = "disabled"
 
-"""
-description- Resets the simulation if running.
-parameters-
-    event - event object for callback binding
-return- void
-"""
 def resetSim(event=None):
+    """
+    description- Resets the simulation if running.
+    parameters-
+        event: event object for callback binding
+    return- void
+    """
+
     global simActive
     global tCarsOutE, tCarsOutN, tCarsOutS, tCarsOutW
     global carsInN, carsInS, carsInW, carsInE
@@ -869,14 +879,15 @@ def resetSim(event=None):
     tCarsInE.insert('1.0', '30')
     tCarsInS.insert('1.0', '30')
 
-"""
-description- Returns the traffic flow rate at a specific time since GREEN light activated.
-parameters-
-    t- current time (second) since green light activated
-return-
-    flowRate- flow rate at specific time
-"""
 def calculateCurrRate(t):
+    """
+    description- Returns the traffic flow rate at a specific time since GREEN light activated.
+    parameters-
+        t: current time (second) since green light activated
+    return-
+        flowRate: flow rate at specific time
+    """
+
     global maxFlowRate, flowRateScalar, flowDelayScalar
     # divide flow rate by 2
     maxFlowRate = float(tMaxFlowRate.get("1.0", "end-1c")) / 2
@@ -895,13 +906,14 @@ def calculateCurrRate(t):
 
     return flowRate
 
-"""
-description- Updates flow rate/flow delay scalars based on scenario selection.
-parameters-
-    args
-return- void
-"""
 def scenarioChange(*args):
+    """
+    description- Updates flow rate/flow delay scalars based on scenario selection.
+    parameters-
+        args
+    return- void
+    """
+
     global flowRateScalar, flowDelayScalar
 
     # change based on selected scenario
@@ -918,13 +930,14 @@ def scenarioChange(*args):
         flowRateScalar = 0.4
         flowDelayScalar = 0.5
 
-"""
-description- Updates flow rate/flow delay scalars based on day selection.
-parameters-
-    args
-return- void
-"""
 def dayChange(*args):
+    """
+    description- Updates flow rate/flow delay scalars based on day selection.
+    parameters-
+        args
+    return- void
+    """
+
     global flowRateScalar, flowDelayScalar
 
     # change based on selected day of week
@@ -938,13 +951,14 @@ def dayChange(*args):
         flowRateScalar = 1.2
         flowDelayScalar = 1
 
-"""
-description- Updates flow rate/flow delay scalars based on time of day selection.
-parameters-
-    args
-return- void
-"""
 def timeChange(*args):
+    """
+    description- Updates flow rate/flow delay scalars based on time of day selection.
+    parameters-
+        args
+    return- void
+    """
+
     global flowRateScalar, flowDelayScalar
 
     # change based on selected time of day
@@ -958,91 +972,93 @@ def timeChange(*args):
         flowRateScalar = 1.5
         flowDelayScalar = 1
 
-"""
-description- Disables all text boxes so that user cannot modify them.
-parameters- none
-return- void
-"""
 def disableEdits():
-	tCarsInW.configure(state = 'disabled')
-	tCarsInN.configure(state = 'disabled')
-	tCarsInE.configure(state = 'disabled')
-	tCarsInS.configure(state = 'disabled')
-	tCarsOutW.configure(state = 'disabled')
-	tCarsOutN.configure(state = 'disabled')
-	tCarsOutE.configure(state = 'disabled')
-	tCarsOutS.configure(state = 'disabled')
-	tTimeNS.configure(state = 'disabled')
+    """
+    description- Disables all text boxes so that user cannot modify them.
+    parameters- none
+    return- void
+    """
 
-	tTimeNSGrnArr.configure(state = 'disabled')
-	tTimeWE.configure(state = 'disabled')
-	tTimeWEGrnArr.configure(state = 'disabled')
+    tCarsInW.configure(state = 'disabled')
+    tCarsInN.configure(state = 'disabled')
+    tCarsInE.configure(state = 'disabled')
+    tCarsInS.configure(state = 'disabled')
+    tCarsOutW.configure(state = 'disabled')
+    tCarsOutN.configure(state = 'disabled')
+    tCarsOutE.configure(state = 'disabled')
+    tCarsOutS.configure(state = 'disabled')
+    tTimeNS.configure(state = 'disabled')
 
-	tInflowW.configure(state = 'disabled')
-	tInflowN.configure(state = 'disabled')
-	tInflowE.configure(state = 'disabled')
-	tInflowS.configure(state = 'disabled')
+    tTimeNSGrnArr.configure(state = 'disabled')
+    tTimeWE.configure(state = 'disabled')
+    tTimeWEGrnArr.configure(state = 'disabled')
 
-	tRightW.configure(state = 'disabled')
-	tStraightW.configure(state = 'disabled')
-	tLeftW.configure(state = 'disabled')
+    tInflowW.configure(state = 'disabled')
+    tInflowN.configure(state = 'disabled')
+    tInflowE.configure(state = 'disabled')
+    tInflowS.configure(state = 'disabled')
 
-	tRightN.configure(state = 'disabled')
-	tStraightN.configure(state = 'disabled')
-	tLeftN.configure(state = 'disabled')
+    tRightW.configure(state = 'disabled')
+    tStraightW.configure(state = 'disabled')
+    tLeftW.configure(state = 'disabled')
 
-	tRightE.configure(state = 'disabled')
-	tStraightE.configure(state = 'disabled')
-	tLeftE.configure(state = 'disabled')
+    tRightN.configure(state = 'disabled')
+    tStraightN.configure(state = 'disabled')
+    tLeftN.configure(state = 'disabled')
 
-	tRightS.configure(state = 'disabled')
-	tStraightS.configure(state = 'disabled')
-	tLeftS.configure(state = 'disabled')
+    tRightE.configure(state = 'disabled')
+    tStraightE.configure(state = 'disabled')
+    tLeftE.configure(state = 'disabled')
 
-	tMaxFlowRate.configure(state = 'disabled')
+    tRightS.configure(state = 'disabled')
+    tStraightS.configure(state = 'disabled')
+    tLeftS.configure(state = 'disabled')
 
-"""
-description- Enables all text boxes so that users can modify them.
-parameters- none
-return- void
-"""
+    tMaxFlowRate.configure(state = 'disabled')
+
 def enableEdits():
-	tCarsInW.configure(state = 'normal')
-	tCarsInN.configure(state = 'normal')
-	tCarsInE.configure(state = 'normal')
-	tCarsInS.configure(state = 'normal')
-	tCarsOutW.configure(state = 'normal')
-	tCarsOutN.configure(state = 'normal')
-	tCarsOutE.configure(state = 'normal')
-	tCarsOutS.configure(state = 'normal')
-	tTimeNS.configure(state = 'normal')
+    """
+    description- Enables all text boxes so that users can modify them.
+    parameters- none
+    return- void
+    """
 
-	tTimeNSGrnArr.configure(state = 'normal')
-	tTimeWE.configure(state = 'normal')
-	tTimeWEGrnArr.configure(state = 'normal')
+    tCarsInW.configure(state = 'normal')
+    tCarsInN.configure(state = 'normal')
+    tCarsInE.configure(state = 'normal')
+    tCarsInS.configure(state = 'normal')
+    tCarsOutW.configure(state = 'normal')
+    tCarsOutN.configure(state = 'normal')
+    tCarsOutE.configure(state = 'normal')
+    tCarsOutS.configure(state = 'normal')
+    tTimeNS.configure(state = 'normal')
 
-	tInflowW.configure(state = 'normal')
-	tInflowN.configure(state = 'normal')
-	tInflowE.configure(state = 'normal')
-	tInflowS.configure(state = 'normal')
+    tTimeNSGrnArr.configure(state = 'normal')
+    tTimeWE.configure(state = 'normal')
+    tTimeWEGrnArr.configure(state = 'normal')
 
-	tRightW.configure(state = 'normal')
-	tStraightW.configure(state = 'normal')
-	tLeftW.configure(state = 'normal')
+    tInflowW.configure(state = 'normal')
+    tInflowN.configure(state = 'normal')
+    tInflowE.configure(state = 'normal')
+    tInflowS.configure(state = 'normal')
 
-	tRightN.configure(state = 'normal')
-	tStraightN.configure(state = 'normal')
-	tLeftN.configure(state = 'normal')
+    tRightW.configure(state = 'normal')
+    tStraightW.configure(state = 'normal')
+    tLeftW.configure(state = 'normal')
 
-	tRightE.configure(state = 'normal')
-	tStraightE.configure(state = 'normal')
-	tLeftE.configure(state = 'normal')
+    tRightN.configure(state = 'normal')
+    tStraightN.configure(state = 'normal')
+    tLeftN.configure(state = 'normal')
 
-	tRightS.configure(state = 'normal')
-	tStraightS.configure(state = 'normal')
-	tLeftS.configure(state = 'normal')
+    tRightE.configure(state = 'normal')
+    tStraightE.configure(state = 'normal')
+    tLeftE.configure(state = 'normal')
 
-	tMaxFlowRate.configure(state = 'normal')
+    tRightS.configure(state = 'normal')
+    tStraightS.configure(state = 'normal')
+    tLeftS.configure(state = 'normal')
+
+    tMaxFlowRate.configure(state = 'normal')
 
 # CALLBACK BINDINGS
 bRunSim.bind("<Button-1>", startSim)
