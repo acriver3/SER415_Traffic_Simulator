@@ -4,7 +4,10 @@
 
 <b>SETUP INSTRUCTIONS<b>
 
-To run the traffic simulator, either double-click the executable (), or run the source code with Python using the following commands (starting from root project directory):
+To run the traffic simulator, either double-click the executable (/TrafficSimulator.exe), or run the source code with Python using the following commands (starting from root project directory):
+
+cd src/
+python normalgui.py OR python3 normalgui.py
 
 <b>SOURCE FUNCTIONS<b>
 
