@@ -1047,10 +1047,12 @@ def enableEdits():
 # CALLBACK BINDINGS
 bRunSim.bind("<Button-1>", startSim)
 bStopSim.bind("<Button-1>", stopSim)
+bResetSim.bind("<Button-1>", resetSim)
 
 currScenario.trace('w', scenarioChange)
 currDay.trace('w', dayChange)
 currDayTime.trace('w', timeChange)
+
 #-------------------------------------------------------------------------------
 
 # start main loop
